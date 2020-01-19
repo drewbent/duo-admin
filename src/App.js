@@ -1,19 +1,35 @@
 import React from 'react'
-import { CssBaseline } from '@material-ui/core'
+import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
+import AuthRoute from './components/authenticated-route'
+
+import Classes from './components/pages/classes'
 import Login from './components/pages/login'
+import NotFound from './components/pages/not-found'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: '#FF7890' },
+  },
+})
 
 function App() {
   return (
-    <Router>
-      <CssBaseline />
-      <Switch>
-        <Route component={ Login }
-          exact
-          path='/login' />
-      </Switch>
-    </Router>
+    <ThemeProvider theme={ theme }>
+      <Router>
+        <CssBaseline />
+        <Switch>
+          <Route component={ Login }
+            exact
+            path='/login' />
+          <AuthRoute component={ Classes }
+            exact
+            path='/' />
+          <Route component={ NotFound } />
+        </Switch>
+      </Router>
+    </ThemeProvider>
   )
 }
 
