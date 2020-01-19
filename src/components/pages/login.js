@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { Redirect } from 'react-router-dom' 
+import { connect } from 'react-redux'
 
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core'
 
@@ -33,10 +35,25 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function Login() {
+const mapStateToProps = state => ({
+  isLoggedIn: state.CurrentUser.isLoggedIn,
+})
+
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    login: login(dispatch),
+  },
+})
+
+function Login(props) {
   const classes = useStyles()
+  const { actions } = props
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  if (props.isLoggedIn) {
+    return <Redirect to='/' />
+  }
 
   return (
     <div className={ classes.container }>
@@ -65,7 +82,7 @@ function Login() {
           className={ classes.loginButton }
           color='primary'
           onClick={ () => {
-            login()
+            actions.login(email, password)
               .catch(e => flashError(e.toString()))
           } }
           variant='contained'
@@ -77,4 +94,4 @@ function Login() {
   )
 }
 
-export default Login
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

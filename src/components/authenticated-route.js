@@ -1,20 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import { isLoggedIn } from '../services/auth-service'
+const mapStateToProps = state => ({
+  isLoggedIn: state.CurrentUser.isLoggedIn,
+})
 
-function AuthenticatedRoute({ component: Component, ...rest }) {
-  // TODO: Initial state should be based on some persisted state
-  const [loggedIn, setLoggedIn] = useState(true)
-
-  isLoggedIn()
-    .then(loggedIn => setLoggedIn(loggedIn))
-
+function AuthenticatedRoute({ isLoggedIn, component: Component, ...rest }) {
   return (
     <Route 
       { ...rest }
       render={ props => 
-        loggedIn ? (
+        isLoggedIn ? (
           <Component { ...props } />
         ) : (
           <Redirect to='/login' />
@@ -24,4 +21,4 @@ function AuthenticatedRoute({ component: Component, ...rest }) {
   )
 }
 
-export default AuthenticatedRoute
+export default connect(mapStateToProps)(AuthenticatedRoute)
