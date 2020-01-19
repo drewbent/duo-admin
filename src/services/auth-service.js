@@ -1,4 +1,4 @@
-import { logout as logoutRedux, setLoggedIn, updateUser } from '../redux/actions/current-user'
+import { logout as logoutRedux, setLoggedIn, updateUser } from 'redux/actions/current-user'
 
 /**
  * This service serves as an abstraction layer for authentication

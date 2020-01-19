@@ -1,4 +1,4 @@
-import ApiResponseError from '../models/errors/api-response-error'
+import ApiResponseError from 'models/errors/api-response-error'
 import axios from 'axios'
 
 const api = axios.create()

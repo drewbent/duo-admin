@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core'
 
-import { flashError } from '../global-flash'
-import { login } from '../../services/auth-service'
+import { flashError } from 'components/global-flash'
+import { login } from 'services/auth-service'
 
 const useStyles = makeStyles(theme => ({
   container: {

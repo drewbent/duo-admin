@@ -1,4 +1,4 @@
-import { HIDE_FLASH, SHOW_FLASH } from '../action-list'
+import { HIDE_FLASH, SHOW_FLASH } from 'redux/action-list'
 
 const initialState = {
   variant: 'info',

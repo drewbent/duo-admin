@@ -11,8 +11,8 @@ import { IconButton, Snackbar, SnackbarContent, makeStyles } from '@material-ui/
 import { connect } from 'react-redux'
 import { green } from '@material-ui/core/colors'
 
-import * as actions from '../redux/actions/global-flash'
-import store from '../redux/store'
+import * as actions from 'redux/actions/global-flash'
+import store from 'redux/store'
 
 const variantIcon = {
   success: SuccessIcon,
