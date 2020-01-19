@@ -23,7 +23,7 @@ export const fetchLoginStatus = dispatch => async() => {
 }
 
 export const login = dispatch => async(email, password) => {
-  const user = await auth.signInWithEmailAndPassword(email, password)
+  const { user } = await auth.signInWithEmailAndPassword(email, password)
 
   if (!isAdmin(user))
     throw new Error('Must be an admin.')

@@ -30,6 +30,14 @@ This will run the linter and notify you of any linting errors.
 
 This will run the linter, and fix any automatically fixable issues.
 
+### `yarn test`
+
+This will run the unit test suite and collect coverage.
+
+### `yarn test:nocoverage`
+
+This will run the test suite without collecting coverage.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
