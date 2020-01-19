@@ -7,4 +7,5 @@ module.exports = {
   setupFiles: [
     '<rootDir>/jest.init.js',
   ],
+  moduleDirectories: ['node_modules', 'src'],
 }

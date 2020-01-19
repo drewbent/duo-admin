@@ -1,6 +1,6 @@
-import * as actions from '../../../src/redux/action-list'
+import * as actions from 'redux/action-list'
 import expect from 'expect'
-import reducer from '../../../src/redux/reducers/current-user'
+import reducer from 'redux/reducers/current-user'
 
 describe('Reducer: CurrentUser', () => {
   it('Handles LOG_OUT', () => {

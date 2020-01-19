@@ -1,4 +1,4 @@
-import { LOG_OUT, SET_LOGGED_IN, UPDATE_CURRENT_USER } from '../action-list'
+import { LOG_OUT, SET_LOGGED_IN, UPDATE_CURRENT_USER } from 'redux/action-list'
 
 export const setLoggedIn = isLoggedIn => ({
   type: SET_LOGGED_IN,

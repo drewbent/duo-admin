@@ -1,3 +1,5 @@
+const path = require('path')
+
 const CopyPlugin = require('copy-webpack-plugin')
 const DoteEnvPlugin = require('dotenv-webpack')
 const ManifestPlugin = require('webpack-manifest-plugin')
@@ -60,5 +62,6 @@ module.exports = {
   ],
   resolve: {
     extensions: ['*', '.js', '.jsx'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
   },
 }
