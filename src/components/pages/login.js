@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core'
 
+import { flashError } from '../global-flash'
 import { login } from '../../services/auth-service'
 
 const useStyles = makeStyles(theme => ({
@@ -65,6 +66,7 @@ function Login() {
           color='primary'
           onClick={ () => {
             login()
+              .catch(e => flashError(e.toString()))
           } }
           variant='contained'
         >

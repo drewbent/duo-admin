@@ -3,6 +3,7 @@ import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import AuthRoute from './components/authenticated-route'
+import GlobalFlash from './components/global-flash'
 
 import Classes from './components/pages/classes'
 import Login from './components/pages/login'
@@ -19,6 +20,7 @@ function App() {
     <ThemeProvider theme={ theme }>
       <Router>
         <CssBaseline />
+        <GlobalFlash />
         <Switch>
           <Route component={ Login }
             exact
