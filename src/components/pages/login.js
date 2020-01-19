@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button, Paper, TextField, Typography, makeStyles } from '@material-ui/core'
+
+import { login } from '../../services/auth-service'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -32,6 +34,8 @@ const useStyles = makeStyles(theme => ({
 
 function Login() {
   const classes = useStyles()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   return (
     <div className={ classes.container }>
@@ -45,16 +49,23 @@ function Login() {
         <TextField
           className={ classes.textField }
           label='Email'
+          onChange={ e => setEmail(e.target.value) }
+          value={ email }
         />
         <TextField 
           autoComplete='current-password'
           className={ classes.textField }
           label='Password'
+          onChange={ e => setPassword(e.target.value) }
           type='password'
+          value={ password }
         />
         <Button 
           className={ classes.loginButton }
           color='primary'
+          onClick={ () => {
+            login()
+          } }
           variant='contained'
         >
           Login
