@@ -28,8 +28,8 @@
       "onlyFilesWithFlowAnnotation": true
     },
     "react": {
-      "version": "detect",
-    },
+      "version": "detect"
+    }
   },
   "rules": {
     "block-scoped-var": "error",
