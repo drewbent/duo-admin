@@ -1,0 +1,280 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true
+  },
+  "globals": {
+    "__dirname": true,
+    "process": true,
+    "__DEV__": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "react",
+    "flowtype",
+    "sort-imports-es6-autofix",
+    "import"
+  ],
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    },
+    "react": {
+      "version": "detect",
+    },
+  },
+  "rules": {
+    "block-scoped-var": "error",
+    "brace-style": [
+      "error",
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "comma-dangle": [
+      "warn",
+      "always-multiline"
+    ],
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "comma-style": [
+      "error",
+      "last"
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "init-declarations": [
+      "error",
+      "always"
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-single"
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true,
+        "overrides": {
+          "break": {
+            "before": true
+          },
+          "else": {
+            "before": true
+          },
+          "finally": {
+            "before": true
+          },
+          "from": {
+            "before": true
+          },
+          "catch": {
+            "before": true
+          },
+          "as": {
+            "before": true
+          },
+          "return": {
+            "before": true,
+            "after": true
+          },
+          "this": {
+            "before": true
+          }
+        }
+      }
+    ],
+    "new-cap": "off",
+    "no-debugger": "error",
+    "no-dupe-keys": "error",
+    "no-empty": "error",
+    "no-extra-semi": "error",
+    "no-extra-boolean-cast": "error",
+    "semi": [
+      "error",
+      "never"
+    ],
+    "no-inline-comments": "off",
+    "no-irregular-whitespace": "error",
+    "no-lonely-if": "off",
+    "no-mixed-spaces-and-tabs": "error",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "no-new": "off",
+    "no-self-compare": "error",
+    "no-undef": "error",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": [
+      "error"
+    ],
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "local",
+        "args": "after-used"
+      }
+    ],
+    "no-var": "error",
+    "one-var": [
+      "error",
+      "never"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "prefer-const": "error",
+    "padded-blocks": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "radix": "error",
+    "sort-vars": "error",
+    "space-before-blocks": [
+      "error",
+      "always"
+    ],
+    "space-before-function-paren": [
+      "error",
+      "never"
+    ],
+    "space-in-brackets": "off",
+    "space-infix-ops": "error",
+    "spaced-comment": [
+      "error",
+      "always"
+    ],
+    "strict": [
+      "error",
+      "never"
+    ],
+    "type-import-style": 0,
+    "vars-on-top": "error",
+    "react/jsx-boolean-value": [
+      "error",
+      "never"
+    ],
+    "react/jsx-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "react/jsx-max-props-per-line": [
+      "error",
+      {
+        "maximum": 1
+      }
+    ],
+    "react/jsx-no-duplicate-props": [
+      "error"
+    ],
+    "react/jsx-no-undef": "error",
+    "react/jsx-sort-props": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/jsx-wrap-multilines": "error",
+    "react/no-did-update-set-state": "off",
+    "react/no-multi-comp": "off",
+    "react/no-unknown-property": "error",
+    "react/react-in-jsx-scope": "error",
+    "react/self-closing-comp": "error",
+    "flowtype/boolean-style": [
+      "error",
+      "boolean"
+    ],
+    "flowtype/define-flow-type": "warn",
+    "flowtype/delimiter-dangle": [
+      "warn",
+      "only-multiline"
+    ],
+    "flowtype/generic-spacing": [
+      "error",
+      "never"
+    ],
+    "flowtype/no-primitive-constructor-types": "error",
+    "flowtype/no-types-missing-file-annotation": "error",
+    "flowtype/no-weak-types": "off",
+    "flowtype/object-type-delimiter": [
+      "error",
+      "comma"
+    ],
+    "flowtype/require-parameter-type": "off",
+    "flowtype/require-return-type": [
+      "off",
+      "always",
+      {
+        "annotateUndefined": "never"
+      }
+    ],
+    "flowtype/require-valid-file-annotation": "error",
+    "flowtype/semi": [
+      "error",
+      "never"
+    ],
+    "flowtype/space-after-type-colon": [
+      "error",
+      "always"
+    ],
+    "flowtype/space-before-generic-bracket": [
+      "error",
+      "never"
+    ],
+    "flowtype/space-before-type-colon": [
+      "error",
+      "never"
+    ],
+    "flowtype/type-id-match": [
+      "error",
+      "^[A-Z][a-z0-9A-Z]+$"
+    ],
+    "flowtype/union-intersection-spacing": [
+      "warn",
+      "always"
+    ],
+    "flowtype/use-flow-type": "warn",
+    "flowtype/valid-syntax": "warn",
+    "flowtype/sort-keys": "error",
+    "sort-imports-es6-autofix/sort-imports-es6": [
+      "error",
+      {
+        "memberSyntaxSortOrder": [
+          "none",
+          "all",
+          "single",
+          "multiple"
+        ]
+      }
+    ],
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "import/namespace": "error"
+  }
+}

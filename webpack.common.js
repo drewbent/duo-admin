@@ -10,55 +10,55 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
  * Config options that apply to both prod & dev
  */
 module.exports = {
-    entry: ['babel-polyfill', './src/index.js'],
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: ['babel-loader'],
+  entry: ['babel-polyfill', './src/index.js'],
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader'],
+      },
+      {
+        test: /\.css$/,
+        exclude: /\.module\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              importLoaders: 1,
+              sourceMap: true,
             },
-            {
-                test: /\.css$/,
-                exclude: /\.module\.css$/,
-                use: [
-                    'style-loader',
-                    {
-                        loader: require.resolve('css-loader'),
-                        options: {
-                            importLoaders: 1,
-                            sourceMap: true,
-                        },
-                    },
-                    {
-                        loader: require.resolve('postcss-loader'),
-                        options: {
-                            ident: 'postcss',
-                            plugins: () => [
-                                PostCSSFlexbugsFixes,
-                                PostCSSPresetEnv({
-                                    stage: 3,
-                                }),
-                                PostCSSNormalize,
-                            ],
-                        },
-                    },
-                ],
+          },
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              ident: 'postcss',
+              plugins: () => [
+                PostCSSFlexbugsFixes,
+                PostCSSPresetEnv({
+                  stage: 3,
+                }),
+                PostCSSNormalize,
+              ],
             },
+          },
         ],
-    },
-    plugins: [
-        new CleanWebpackPlugin(),
-        new CopyPlugin([
-            {
-                from: 'public',
-                to: '',
-            },
-        ]),
-        new DoteEnvPlugin(),
-        new ManifestPlugin(),
+      },
     ],
-    resolve: {
-        extensions: ['*', '.js', '.jsx'],
-    },
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyPlugin([
+      {
+        from: 'public',
+        to: '',
+      },
+    ]),
+    new DoteEnvPlugin(),
+    new ManifestPlugin(),
+  ],
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+  },
 }
