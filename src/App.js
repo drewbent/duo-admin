@@ -3,16 +3,21 @@ import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import AuthRoute from './components/authenticated-route'
-import GlobalFlash from './components/global-flash'
-import SplashScreen from './components/pages/splash-screen'
+import AuthRoute from 'components/authenticated-route'
+import GlobalFlash from 'components/global-flash'
+import SplashScreen from 'components/pages/splash-screen'
 
 // Pages
-import Classes from './components/pages/classes'
-import Login from './components/pages/login'
-import NotFound from './components/pages/not-found'
+import AppBar from 'components/app-bar'
+import Classes from 'components/pages/classes'
+import Login from 'components/pages/login'
+import NotFound from 'components/pages/not-found'
 
 import { fetchLoginStatus } from './services/auth-service'
+
+const routesWithoutAppBar = [
+  '/login', ''
+]
 
 const theme = createMuiTheme({
   palette: {
@@ -39,6 +44,7 @@ function App(props) {
         <Router>
           <CssBaseline />
           <GlobalFlash />
+          {/* {!routesWithoutAppBar.includes(window.location.pathname) && <AppBar />} */}
           <Switch>
             <Route component={ Login }
               exact
