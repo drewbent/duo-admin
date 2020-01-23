@@ -15,10 +15,6 @@ import NotFound from 'components/pages/not-found'
 
 import { fetchLoginStatus } from './services/auth-service'
 
-const routesWithoutAppBar = [
-  '/login', ''
-]
-
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#FF7890' },
@@ -44,7 +40,7 @@ function App(props) {
         <Router>
           <CssBaseline />
           <GlobalFlash />
-          {/* {!routesWithoutAppBar.includes(window.location.pathname) && <AppBar />} */}
+          <AppBar />
           <Switch>
             <Route component={ Login }
               exact

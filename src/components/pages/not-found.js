@@ -1,30 +1,40 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 
-import { Paper, Typography, makeStyles } from '@material-ui/core'
+import { Button, Typography, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
+    flexDirection: 'column',
     height: '100vh',
-    backgroundColor: theme.palette.primary.main,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: theme.spacing(6),
   },
-  paper: {
-    padding: theme.spacing(2),
+  button: {
+    marginTop: theme.spacing(4),
+    color: 'white',
   },
 }))
 
-function NotFound() {
+function NotFound(props) {
   const classes = useStyles()
 
   return (
     <div className={ classes.container }>
-      <Paper className={ classes.paper }>
-        <Typography variant='h3'>404: Page Not Found</Typography>
-      </Paper>
+      <Typography variant='h3'>
+        404: Page Not Found
+      </Typography>
+      <Button
+        className={ classes.button }
+        color='primary'
+        onClick={ () => props.history.push('/') }
+        variant='contained'
+      >
+        Back to Home
+      </Button>
     </div>
   )
 }
 
-export default NotFound
+export default withRouter(NotFound)
