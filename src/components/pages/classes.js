@@ -39,7 +39,10 @@ function Classes(props) {
         onConfirm={ classData => {
           setCreateDialogLoading(true)
           actions.createClass(classData)
-            .then(() => setCreateDialogLoading(true))
+            .then(() => {
+              setCreateDialogLoading(false)
+              setCreateDialogOpen(false)
+            })
             .catch(err => {
               flashError(err.message)
               setCreateDialogLoading(false)

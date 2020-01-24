@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 100,
   },
   textField: {
     marginLeft: theme.spacing(4),
