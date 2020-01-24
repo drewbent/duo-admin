@@ -1,39 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
+import CreateClassDialog from 'components/shared/dialogs/create-class-dialog'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 
-import { logout } from 'services/auth-service'
+import { createClass, fetchClasses } from 'services/classes-service'
+import { flashError } from 'components/global-flash'
 
 const mapDispatchToProps = dispatch => ({
   actions: {
-    logout: logout(dispatch),
+    createClass: createClass(dispatch),
+    fetchClasses: fetchClasses(dispatch),
   },
+})
+
+const mapStateToProps = state => ({
+  classes: Object.values(state.Classes),
 })
 
 function Classes(props) {
   const { actions } = props
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createDialogLoading, setCreateDialogLoading] = useState(false)
+  const [hasFetchedData, setHasFetchedData] = useState(false)
 
-  const sections = [
-    {
-      name: 'KLS Algebra II',
-      students: 10,
-    },
-    {
-      name: 'ODA Algebra II',
-      students: 12,
-    },
-  ]
+  if (!hasFetchedData) {
+    setHasFetchedData(true)
+    actions.fetchClasses()
+      .catch(err => flashError(err.message))
+  }
 
   return (
     <Page>
+      <CreateClassDialog
+        loading={ createDialogLoading }
+        onClose={ () => setCreateDialogOpen(false) }
+        onConfirm={ classData => {
+          setCreateDialogLoading(true)
+          actions.createClass(classData)
+            .then(() => setCreateDialogLoading(true))
+            .catch(err => {
+              flashError(err.message)
+              setCreateDialogLoading(false)
+            })
+        } }
+        onError={ error => flashError(error.message) }
+        open={ createDialogOpen }
+      />
       <MaterialTable
-        columns={ [
-          { title: 'Section', field: 'name', defaultSort: 'asc' },
-          { title: '# Students', field: 'students' },
+        actions={ [
+          {
+            icon: 'add',
+            isFreeAction: true,
+            onClick: () => setCreateDialogOpen(true),
+          },
         ] }
-        data={ sections }
+        columns={ [
+          { title: 'ID', field: 'id', defaultSort: 'asc' },
+          { title: 'Name', field: 'name' },
+        ] }
+        data={ props.classes }
         options={ {
           search: false,
           paging: false,
@@ -44,4 +71,4 @@ function Classes(props) {
   )
 }
 
-export default connect(null, mapDispatchToProps)(Classes)
+export default connect(mapStateToProps, mapDispatchToProps)(Classes)

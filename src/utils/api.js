@@ -1,10 +1,14 @@
-import ApiResponseError from 'models/errors/api-response-error'
+import ApiResponseError from 'models/api-response-error'
 import axios from 'axios'
+import store from 'redux/store'
 
 const api = axios.create()
 
-api.interceptors.request.use((defaultConfig) => {
-  const headers = {}
+api.interceptors.request.use(async(defaultConfig) => {
+  const { user } = store.getState().CurrentUser
+  const headers = {
+    Authorization: `Bearer ${await user.getIdToken()}`,
+  }
 
   return {
     ...defaultConfig,
