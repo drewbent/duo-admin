@@ -5,12 +5,13 @@ import CreateClassDialog from 'components/shared/dialogs/create-class-dialog'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 
-import { createClass, fetchClasses } from 'services/classes-service'
+import { createClass, deleteClass, fetchClasses } from 'services/classes-service'
 import { flashError } from 'components/global-flash'
 
 const mapDispatchToProps = dispatch => ({
   actions: {
     createClass: createClass(dispatch),
+    deleteClass: deleteClass(dispatch),
     fetchClasses: fetchClasses(dispatch),
   },
 })
@@ -64,9 +65,16 @@ function Classes(props) {
           { title: 'Name', field: 'name' },
         ] }
         data={ props.classes }
+        editable={ {
+          onRowDelete: async rowData => {
+            actions.deleteClass(rowData.id)
+              .catch(err => flashError(err.message))
+          },
+        } }
         options={ {
           search: false,
           paging: false,
+          actionsColumnIndex: 2,
         } }
         title='Class Sections'
       />

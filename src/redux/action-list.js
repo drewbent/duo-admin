@@ -7,3 +7,4 @@ export const LOG_OUT = 'LOG_OUT'
 
 export const ADD_CLASSES = 'ADD_CLASSES'
 export const SET_CLASSES = 'SET_CLASSES'
+export const DELETE_CLASS = 'DELETE_CLASS'
