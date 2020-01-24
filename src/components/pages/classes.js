@@ -5,7 +5,7 @@ import CreateClassDialog from 'components/shared/dialogs/create-class-dialog'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 
-import { createClass, deleteClass, fetchClasses } from 'services/classes-service'
+import { createClass, deleteClass, fetchClasses, updateClass } from 'services/classes-service'
 import { flashError } from 'components/global-flash'
 
 const mapDispatchToProps = dispatch => ({
@@ -13,6 +13,7 @@ const mapDispatchToProps = dispatch => ({
     createClass: createClass(dispatch),
     deleteClass: deleteClass(dispatch),
     fetchClasses: fetchClasses(dispatch),
+    updateClass: updateClass(dispatch),
   },
 })
 
@@ -61,13 +62,17 @@ function Classes(props) {
           },
         ] }
         columns={ [
-          { title: 'ID', field: 'id', defaultSort: 'asc' },
+          { title: 'ID', field: 'id', defaultSort: 'asc', editable: false },
           { title: 'Name', field: 'name' },
         ] }
         data={ props.classes }
         editable={ {
           onRowDelete: async rowData => {
             actions.deleteClass(rowData.id)
+              .catch(err => flashError(err.message))
+          },
+          onRowUpdate: async rowData => {
+            actions.updateClass(rowData.id, rowData.name)
               .catch(err => flashError(err.message))
           },
         } }

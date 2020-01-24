@@ -17,6 +17,15 @@ export const createClass = dispatch => async(data) => {
   return dispatch(addClasses([newClass]))
 }
 
+export const updateClass = dispatch => async(id, name) => {
+  if (!name)
+    throw new Error('Must provide a name.')
+  
+  console.log(`Setting class ${id} name to ${name}`)
+  const { data: newClass } = await api.patch(`/classes/${id}`, { name })
+  return dispatch(addClasses([newClass]))
+}
+
 export const deleteClass = dispatch => async(id) => {
   console.log(`Deleting class with id ${id}`)
   await api.del(`/classes/${id}`, { id })
