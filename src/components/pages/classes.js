@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
-import CreateClassDialog from 'components/shared/dialogs/create-class-dialog'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
+import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 
 import { createClass, deleteClass, fetchClasses, updateClass } from 'services/classes-service'
 import { flashError } from 'components/global-flash'
@@ -35,12 +36,12 @@ function Classes(props) {
 
   return (
     <Page>
-      <CreateClassDialog
+      <TextFieldDialog
         loading={ createDialogLoading }
         onClose={ () => setCreateDialogOpen(false) }
-        onConfirm={ classData => {
+        onConfirm={ name => {
           setCreateDialogLoading(true)
-          actions.createClass(classData)
+          actions.createClass({ name })
             .then(() => {
               setCreateDialogLoading(false)
               setCreateDialogOpen(false)
@@ -52,6 +53,11 @@ function Classes(props) {
         } }
         onError={ error => flashError(error.message) }
         open={ createDialogOpen }
+        textFieldProps={ {
+          autoCapitalize: 'words',
+          label: 'Name',
+        } }
+        title='Create New Class'
       />
       <MaterialTable
         actions={ [
@@ -76,6 +82,7 @@ function Classes(props) {
               .catch(err => flashError(err.message))
           },
         } }
+        onRowClick={ (_, rowData) => props.history.push(`/classes/${rowData.id}`) }
         options={ {
           search: false,
           paging: false,
@@ -87,4 +94,4 @@ function Classes(props) {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Classes)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Classes))

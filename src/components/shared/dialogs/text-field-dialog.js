@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
+import Loader from 'components/shared/loader'
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -12,18 +12,6 @@ import {
 } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
-  loaderContainer: {
-    position: 'absolute',
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 100,
-  },
   textField: {
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
@@ -31,20 +19,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function CreateClassDialog(props) {
+function TextFieldDialog(props) {
   const classes = useStyles()
-  const [name, setName] = useState('')
+  const [value, setValue] = useState('')
 
   const onClose = () => {
-    setName('')
+    setValue('')
     props.onClose()
-  }
-
-  const getClass = () => {
-    if (!name)
-      throw new Error('Must enter a name.')
-    
-    return { name }
   }
 
   return (
@@ -53,23 +34,19 @@ function CreateClassDialog(props) {
       onClose={ onClose }
       open={ props.open }
     >
-      {props.loading && <div className={ classes.loaderContainer }>
-        <CircularProgress />
-      </div>}
-      <DialogTitle id='create-class-dialog-title'>Create New Class</DialogTitle>
+      <Loader visible={ props.loading } />
+      <DialogTitle id='create-class-dialog-title'>{props.title}</DialogTitle>
       <TextField 
-        autoCapitalize='words'
+        { ...props.textFieldProps }
         className={ classes.textField }
-        label='Name'
-        onChange={ e => setName(e.target.value) }
-        value={ name }
+        onChange={ e => setValue(e.target.value) }
+        value={ value }
       />
       <DialogActions>
         <Button onClick={ onClose }>Cancel</Button>
         <Button onClick={ () => {
           try {
-            const newClass = getClass()
-            props.onConfirm(newClass)
+            props.onConfirm(value)
           } catch (error) {
             props.onError(error)
           }
@@ -82,7 +59,10 @@ function CreateClassDialog(props) {
   )
 }
 
-CreateClassDialog.propTypes = {
+TextFieldDialog.propTypes = {
+  title: PropTypes.string,
+  textFieldProps: PropTypes.object,
+
   onConfirm: PropTypes.func,
   onClose: PropTypes.func,
   onError: PropTypes.func,
@@ -90,4 +70,4 @@ CreateClassDialog.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default CreateClassDialog
+export default TextFieldDialog

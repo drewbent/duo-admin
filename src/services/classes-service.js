@@ -5,7 +5,13 @@ import { addClasses, deleteClass as deleteClassRedux, setClasses } from 'redux/a
 export const fetchClasses = dispatch => async() => {
   console.log('Fetching classes')
   const { data } = await api.get('/classes')
-  dispatch(setClasses(data))
+  return dispatch(setClasses(data))
+}
+
+export const fetchClass = dispatch => async id => {
+  console.log('Fetching class')
+  const { data } = await api.get(`/classes/${id}`)
+  return dispatch(addClasses([data]))
 }
 
 export const createClass = dispatch => async(data) => {

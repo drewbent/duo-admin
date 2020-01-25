@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import AppBar from 'components/app-bar'
 import AuthRoute from 'components/authenticated-route'
 import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
 
 // Pages
-import AppBar from 'components/app-bar'
+import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
 import Login from 'components/pages/login'
 import NotFound from 'components/pages/not-found'
@@ -45,9 +46,16 @@ function App(props) {
             <Route component={ Login }
               exact
               path='/login' />
+            <Route
+              exact
+              path='/'
+              render={ () => <Redirect to='/classes' /> } />
             <AuthRoute component={ Classes }
               exact
-              path='/' />
+              path='/classes' />
+            <AuthRoute component={ Class }
+              exact
+              path='/classes/:classId' />
             <Route component={ NotFound } />
           </Switch>
         </Router>

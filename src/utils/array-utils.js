@@ -4,3 +4,7 @@ Array.prototype.toObject = function(key) {
     return acc
   }, {})
 }
+
+Array.prototype.objValues = function(key) {
+  return this.map(el => el[key])
+}

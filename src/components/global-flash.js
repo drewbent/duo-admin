@@ -109,7 +109,13 @@ GlobalFlash.propTypes = {
 
 // Helper methods
 export const flashError = message => {
-  store.dispatch(actions.flashError(message || 'Something went wrong'))
+  let flashMessage = 'Something went wrong'
+  if (typeof message == 'string' || message instanceof String)
+    flashMessage = message
+  else if (message instanceof Error && typeof message.message !== undefined)
+    flashMessage = message.message
+
+  store.dispatch(actions.flashError(flashMessage))
 }
 
 export const flashSuccess = message => {
