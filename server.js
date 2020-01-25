@@ -12,8 +12,8 @@ app.get('/ping', (_, res) => {
   return res.send('pong')
 })
 
-app.get('/*', (_, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+app.get('*', (_, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 app.listen(port)

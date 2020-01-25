@@ -1,7 +1,7 @@
 const path = require('path')
 
 const CopyPlugin = require('copy-webpack-plugin')
-const DoteEnvPlugin = require('dotenv-webpack')
+const DotEnvPlugin = require('dotenv-webpack')
 const ManifestPlugin = require('webpack-manifest-plugin')
 const PostCSSFlexbugsFixes = require('postcss-flexbugs-fixes')
 const PostCSSNormalize = require('postcss-normalize')
@@ -57,7 +57,7 @@ module.exports = {
         to: '',
       },
     ]),
-    new DoteEnvPlugin(),
+    new DotEnvPlugin(),
     new ManifestPlugin(),
   ],
   resolve: {
