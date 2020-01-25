@@ -1,6 +1,7 @@
 const path = require('path')
 const merge = require('webpack-merge')
 const common = require('./webpack.common')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('interpolate-html-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -51,6 +52,11 @@ module.exports = merge(common, {
         'STATIC_URL': '/static',
       },
     ),
+    new webpack.DefinePlugin({
+      'process.env': {
+        API_URL: process.env.API_URL,
+      },
+    }),
   ],
   output: {
     globalObject: 'this',
