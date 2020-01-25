@@ -6,7 +6,13 @@ import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 
-import { createClassStudent, deleteStudent, fetchClassStudents, updateStudent } from 'services/class-student-service'
+import { 
+  createClassStudent,
+  createClassStudents,
+  deleteStudent, 
+  fetchClassStudents, 
+  updateStudent,
+} from 'services/class-student-service'
 import { fetchClass } from 'services/classes-service'
 import { flashError } from 'components/global-flash'
 
@@ -31,6 +37,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     actions: {
       createClassStudent: email => createClassStudent(dispatch)(classId, email),
+      createClassStudents: emails => createClassStudents(dispatch)(classId, emails),
       deleteStudent: id => deleteStudent(dispatch)(classId, id),
       fetchClass: () => fetchClass(dispatch)(classId),
       fetchClassStudents: () => fetchClassStudents(dispatch)(classId),
@@ -41,8 +48,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 function Class(props) {
   const { actions } = props
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogLoading, setDialogLoading] = useState(false)
+  const [createOneDialogOpen, setCreateOneDialogOpen] = useState(false)
+  const [createOneDialogLoading, setCreateOneDialogLoading] = useState(false)
+  const [createMultiDialogOpen, setCreateMultiDialogOpen] = useState(false)
+  const [createMultiDialogLoading, setCreateMultiDialogLoading] = useState(false)
   const [hasFetchedData, setHasFetchedData] = useState(false)
 
   if (!hasFetchedData) {
@@ -60,35 +69,65 @@ function Class(props) {
   return (
     <Page>
       <TextFieldDialog 
-        loading={ dialogLoading }
-        onClose={ () => setDialogOpen(false) }
+        loading={ createOneDialogLoading }
+        onClose={ () => setCreateOneDialogOpen(false) }
         onConfirm={ email => {
-          setDialogLoading(true)
+          setCreateOneDialogLoading(true)
           actions.createClassStudent(email)
             .then(() => {
-              setDialogLoading(false)
-              setDialogOpen(false)
+              setCreateOneDialogLoading(false)
+              setCreateOneDialogOpen(false)
             })
             .catch(err => {
-              setDialogLoading(false)
+              setCreateOneDialogLoading(false)
               flashError(err)
             })
         } }
-        onError={ flashError }
-        open={ dialogOpen }
+        open={ createOneDialogOpen }
         textFieldProps={ {
           autoCapitalize: 'none',
           label: 'Email',
         } }
         title='Add Student Email'
       />
+      <TextFieldDialog 
+        loading={ createMultiDialogLoading }
+        onClose={ () => setCreateMultiDialogOpen(false) }
+        onConfirm={ text => {
+          setCreateMultiDialogLoading(true)
+          const emails = text.split('\n')
+          actions.createClassStudents(emails)
+            .then(() => {
+              setCreateMultiDialogOpen(false)
+              setCreateMultiDialogLoading(false)
+            })
+            .catch(err => {
+              setCreateMultiDialogLoading(false)
+              flashError(err)
+            })
+        } }
+        open={ createMultiDialogOpen }
+        textFieldProps={ { 
+          autoCapitalize: 'none',
+          label: 'Emails',
+          multiline: true,
+          placeholder: 'Add emails with a new line between each one',
+        } }
+        title='Add Student Emails'
+      />
       <MaterialTable
         actions={ [
           { 
             title: 'Add Student', 
-            icon: 'add', 
+            icon: 'add_box', 
             isFreeAction: true,
-            onClick: () => setDialogOpen(true),
+            onClick: () => setCreateOneDialogOpen(true),
+          },
+          {
+            title: 'Add Multiple Students',
+            icon: 'queue',
+            isFreeAction: true,
+            onClick: () => setCreateMultiDialogOpen(true),
           },
         ] }
         columns={ [

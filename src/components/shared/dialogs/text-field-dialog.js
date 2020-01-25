@@ -1,26 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
-import Loader from 'components/shared/loader'
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  TextField,
-  makeStyles,
-} from '@material-ui/core'
-
-const useStyles = makeStyles(theme => ({
-  textField: {
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(2),
-  },
-}))
+import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
+import { TextField } from '@material-ui/core'
 
 function TextFieldDialog(props) {
-  const classes = useStyles()
   const [value, setValue] = useState('')
 
   const onClose = () => {
@@ -29,33 +13,18 @@ function TextFieldDialog(props) {
   }
 
   return (
-    <Dialog
-      aria-labelledby='create-class-dialog-title'
+    <ConfirmDialog
       onClose={ onClose }
+      onConfirm={ () => props.onConfirm(value) }
       open={ props.open }
+      title={ props.title }
     >
-      <Loader visible={ props.loading } />
-      <DialogTitle id='create-class-dialog-title'>{props.title}</DialogTitle>
       <TextField 
         { ...props.textFieldProps }
-        className={ classes.textField }
         onChange={ e => setValue(e.target.value) }
         value={ value }
       />
-      <DialogActions>
-        <Button onClick={ onClose }>Cancel</Button>
-        <Button onClick={ () => {
-          try {
-            props.onConfirm(value)
-          } catch (error) {
-            props.onError(error)
-          }
-        } }
-        >
-          Confirm
-        </Button>
-      </DialogActions>
-    </Dialog>
+    </ConfirmDialog>
   )
 }
 
@@ -65,7 +34,6 @@ TextFieldDialog.propTypes = {
 
   onConfirm: PropTypes.func,
   onClose: PropTypes.func,
-  onError: PropTypes.func,
   open: PropTypes.bool,
   loading: PropTypes.bool,
 }

@@ -1,7 +1,7 @@
 import 'utils/array-utils'
 import * as api from 'utils/api'
 
-import { addClassStudent, deleteClassStudent, setClassStudents } from 'redux/actions/class-students'
+import { addClassStudents, deleteClassStudent, setClassStudents } from 'redux/actions/class-students'
 import { addStudents, deleteStudent as deleteStudentRedux } from 'redux/actions/students'
 
 export const fetchClassStudents = dispatch => async(classId) => {
@@ -18,7 +18,16 @@ export const createClassStudent = dispatch => async(classId, email) => {
   const { data: student } = await api.post(`/classes/${classId}/students`, { email })
   return Promise.all([
     dispatch(addStudents([student])),
-    dispatch(addClassStudent(student.id)),
+    dispatch(addClassStudents(classId, [student.id])),
+  ])
+}
+
+export const createClassStudents = dispatch => async(classId, emails) => {
+  console.log(`Adding ${emails.length} students to class ${classId}`)
+  const { data: students } = await api.post(`/classes/${classId}/students/create-multiple`, { emails })
+  return Promise.all([
+    dispatch(addStudents(students)),
+    dispatch(addClassStudents(classId, students.objValues('id'))),
   ])
 }
 
@@ -26,7 +35,7 @@ export const deleteStudent = dispatch => async(classId, studentId) => {
   console.log(`Deleting student ${studentId} from class ${classId}`)
   await api.del(`/classes/${classId}/students/${studentId}`)
   return Promise.all([
-    dispatch(deleteClassStudent(studentId)),
+    dispatch(deleteClassStudent(classId, studentId)),
     dispatch(deleteStudentRedux(studentId)),
   ])
 }

@@ -62,7 +62,7 @@ function Classes(props) {
       <MaterialTable
         actions={ [
           {
-            icon: 'add',
+            icon: 'add_box',
             isFreeAction: true,
             onClick: () => setCreateDialogOpen(true),
           },
