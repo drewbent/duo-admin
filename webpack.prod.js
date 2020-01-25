@@ -41,11 +41,7 @@ module.exports = merge(common, {
     },
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        API_URL: process.env.API_URL,
-      },
-    }),
+    new webpack.EnvironmentPlugin(['API_URL']),
     new HtmlWebpackPlugin({
       inject: true,
       path: path.resolve(__dirname, 'dist'),
