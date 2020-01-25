@@ -51,7 +51,6 @@ function Classes(props) {
               setCreateDialogLoading(false)
             })
         } }
-        onError={ error => flashError(error.message) }
         open={ createDialogOpen }
         textFieldProps={ {
           autoCapitalize: 'words',
