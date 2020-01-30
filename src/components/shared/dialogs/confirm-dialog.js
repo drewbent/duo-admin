@@ -11,6 +11,9 @@ import {
 } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    minWidth: 600,
+  },
   content: {
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
@@ -27,15 +30,17 @@ function ConfirmDialog(props) {
       onClose={ props.onClose }
       open={ props.open }
     >
-      <Loader visible={ props.loading } />
-      <DialogTitle id='dialog-title'>{props.title}</DialogTitle>
-      <div className={ classes.content }>
-        {props.children}
+      <div className={ classes.container }>
+        <Loader visible={ props.loading } />
+        <DialogTitle id='dialog-title'>{props.title}</DialogTitle>
+        <div className={ classes.content }>
+          {props.children}
+        </div>
+        <DialogActions>
+          <Button onClick={ props.onClose }>Cancel</Button>
+          <Button onClick={ props.onConfirm }>Confirm</Button>
+        </DialogActions>
       </div>
-      <DialogActions>
-        <Button onClick={ props.onClose }>Cancel</Button>
-        <Button onClick={ props.onConfirm }>Confirm</Button>
-      </DialogActions>
     </Dialog>
   )
 }

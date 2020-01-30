@@ -21,6 +21,7 @@ function TextFieldDialog(props) {
     >
       <TextField 
         { ...props.textFieldProps }
+        fullWidth
         onChange={ e => setValue(e.target.value) }
         value={ value }
       />

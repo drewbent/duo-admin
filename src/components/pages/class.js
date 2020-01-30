@@ -7,7 +7,6 @@ import Page from 'components/shared/page'
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 
 import { 
-  createClassStudent,
   createClassStudents,
   deleteStudent, 
   fetchClassStudents, 
@@ -36,8 +35,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     actions: {
-      createClassStudent: email => createClassStudent(dispatch)(classId, email),
-      createClassStudents: emails => createClassStudents(dispatch)(classId, emails),
+      createClassStudents: data => createClassStudents(dispatch)(classId, data),
       deleteStudent: id => deleteStudent(dispatch)(classId, id),
       fetchClass: () => fetchClass(dispatch)(classId),
       fetchClassStudents: () => fetchClassStudents(dispatch)(classId),
@@ -48,8 +46,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 function Class(props) {
   const { actions } = props
-  const [createOneDialogOpen, setCreateOneDialogOpen] = useState(false)
-  const [createOneDialogLoading, setCreateOneDialogLoading] = useState(false)
   const [createMultiDialogOpen, setCreateMultiDialogOpen] = useState(false)
   const [createMultiDialogLoading, setCreateMultiDialogLoading] = useState(false)
   const [hasFetchedData, setHasFetchedData] = useState(false)
@@ -68,35 +64,24 @@ function Class(props) {
 
   return (
     <Page>
-      <TextFieldDialog 
-        loading={ createOneDialogLoading }
-        onClose={ () => setCreateOneDialogOpen(false) }
-        onConfirm={ email => {
-          setCreateOneDialogLoading(true)
-          actions.createClassStudent(email)
-            .then(() => {
-              setCreateOneDialogLoading(false)
-              setCreateOneDialogOpen(false)
-            })
-            .catch(err => {
-              setCreateOneDialogLoading(false)
-              flashError(err)
-            })
-        } }
-        open={ createOneDialogOpen }
-        textFieldProps={ {
-          autoCapitalize: 'none',
-          label: 'Email',
-        } }
-        title='Add Student Email'
-      />
-      <TextFieldDialog 
+      <TextFieldDialog
         loading={ createMultiDialogLoading }
         onClose={ () => setCreateMultiDialogOpen(false) }
         onConfirm={ text => {
           setCreateMultiDialogLoading(true)
-          const emails = text.split('\n')
-          actions.createClassStudents(emails)
+          const data = []
+          const emailsAndNames = text.split('\n')
+          for (const studentData of emailsAndNames) {
+            const components = studentData.split(',')
+            if (components.length != 2) {
+              flashError('Data is malformed')
+              return
+            } else {
+              data.push({ email: components[0], name: components[1] })
+            }
+          }
+
+          actions.createClassStudents(data)
             .then(() => {
               setCreateMultiDialogOpen(false)
               setCreateMultiDialogLoading(false)
@@ -109,20 +94,14 @@ function Class(props) {
         open={ createMultiDialogOpen }
         textFieldProps={ { 
           autoCapitalize: 'none',
-          label: 'Emails',
+          label: 'Emails & Names',
           multiline: true,
-          placeholder: 'Add emails with a new line between each one',
+          placeholder: 'Add emails and names with a new line between each one, and a comma separating email from name. For example: \n\nstudent@email.com,Phil Shen',
         } }
         title='Add Student Emails'
       />
       <MaterialTable
         actions={ [
-          { 
-            title: 'Add Student', 
-            icon: 'add_box', 
-            isFreeAction: true,
-            onClick: () => setCreateOneDialogOpen(true),
-          },
           {
             title: 'Add Multiple Students',
             icon: 'queue',
@@ -132,6 +111,7 @@ function Class(props) {
         ] }
         columns={ [
           { title: 'ID', field: 'id' },
+          { title: 'Name', field: 'name' },
           { title: 'Email', field: 'email', defaultSort: 'asc' },
         ] }
         data={ props.students }
@@ -144,7 +124,7 @@ function Class(props) {
           },
         } }
         options={ {
-          actionsColumnIndex: 2,
+          actionsColumnIndex: 3,
           paging: false,
         } }
         title={ `Students for ${props.classSection.name}` }

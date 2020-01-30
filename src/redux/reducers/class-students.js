@@ -11,7 +11,6 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case ADD_CLASS_STUDENTS:
       console.log(`Redux: Adding student ${studentIds} to class ${classId}`)
-      console.log(studentIds)
       return { ...state, [classId]: [ ...(state[classId] || []), ...studentIds ] }
     case DELETE_CLASS_STUDENT:
       console.log(`Redux: Deleting student ${studentId} from class ${classId}`)

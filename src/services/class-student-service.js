@@ -22,12 +22,16 @@ export const createClassStudent = dispatch => async(classId, email) => {
   ])
 }
 
-export const createClassStudents = dispatch => async(classId, emails) => {
-  console.log(`Adding ${emails.length} students to class ${classId}`)
-  const { data: students } = await api.post(`/classes/${classId}/students/create-multiple`, { emails })
+/**
+ * 
+ * @param {Array<Object>} students An array of objects containing {email: string, name: string}
+ */
+export const createClassStudents = dispatch => async(classId, students) => {
+  console.log(`Adding ${students.length} students to class ${classId}`)
+  const { data: newStudents } = await api.post(`/classes/${classId}/students/create-multiple`, { students })
   return Promise.all([
-    dispatch(addStudents(students)),
-    dispatch(addClassStudents(classId, students.objValues('id'))),
+    dispatch(addStudents(newStudents)),
+    dispatch(addClassStudents(classId, newStudents.objValues('id'))),
   ])
 }
 
