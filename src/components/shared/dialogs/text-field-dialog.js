@@ -14,6 +14,7 @@ function TextFieldDialog(props) {
 
   return (
     <ConfirmDialog
+      loading={ props.loading }
       onClose={ onClose }
       onConfirm={ () => props.onConfirm(value) }
       open={ props.open }

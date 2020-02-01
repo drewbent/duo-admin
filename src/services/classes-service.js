@@ -15,20 +15,14 @@ export const fetchClass = dispatch => async id => {
 }
 
 export const createClass = dispatch => async(data) => {
-  if (!data.name)
-    throw new Error('Must provide a name.')
-
   console.log('Creating new class')
   const { data: newClass } = await api.post('/classes', data)
   return dispatch(addClasses([newClass]))
 }
 
-export const updateClass = dispatch => async(id, name) => {
-  if (!name)
-    throw new Error('Must provide a name.')
-  
+export const updateClass = dispatch => async(id, data) => {
   console.log(`Setting class ${id} name to ${name}`)
-  const { data: newClass } = await api.patch(`/classes/${id}`, { name })
+  const { data: newClass } = await api.patch(`/classes/${id}`, data)
   return dispatch(addClasses([newClass]))
 }
 
