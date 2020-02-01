@@ -14,8 +14,8 @@ export const fetchUser = dispatch => async(id) => {
   return dispatch(addUsers([data]))
 }
 
-export const updateUser = dispatch => async(id, name) => {
+export const updateUser = dispatch => async(id, data) => {
   console.log(`Updating user with id ${id}`)
-  const { data } = await api.patch(`/users/${id}`, { name })
-  return dispatch(addUsers([data]))
+  const { data: user } = await api.patch(`/users/${id}`, data)
+  return dispatch(addUsers([user]))
 }

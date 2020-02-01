@@ -44,8 +44,8 @@ export const deleteStudent = dispatch => async(classId, studentId) => {
   ])
 }
 
-export const updateStudent = dispatch => async(classId, studentId, email) => {
-  console.log(`Updating student ${studentId} with email ${email}`)
-  const { data: student } = await api.patch(`/classes/${classId}/students/${studentId}`, { email })
+export const updateStudent = dispatch => async(classId, studentId, data) => {
+  console.log(`Updating student ${studentId}`)
+  const { data: student } = await api.patch(`/classes/${classId}/students/${studentId}`, data)
   return dispatch(addStudents([student]))
 }

@@ -13,7 +13,7 @@ import {
   updateStudent,
 } from 'services/class-student-service'
 import { fetchClass } from 'services/classes-service'
-import { flashError } from 'components/global-flash'
+import { flashError, flashSuccess } from 'components/global-flash'
 
 function getClassId(props) {
   return props.match.params.classId
@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       deleteStudent: id => deleteStudent(dispatch)(classId, id),
       fetchClass: () => fetchClass(dispatch)(classId),
       fetchClassStudents: () => fetchClassStudents(dispatch)(classId),
-      updateStudent: (id, email) => updateStudent(dispatch)(classId, id, email),
+      updateStudent: (id, data) => updateStudent(dispatch)(classId, id, data),
     },
   }
 }
@@ -117,10 +117,15 @@ function Class(props) {
         data={ props.students }
         editable={ {
           onRowDelete: async newData => {
-            return actions.deleteStudent(newData.id).catch(flashError)
+            return actions.deleteStudent(newData.id)
+              .then(() => flashSuccess('Student deleted.'))
+              .catch(flashError)
           },
           onRowUpdate: async newData => {
-            return actions.updateStudent(newData.id, newData.email).catch(flashError)
+            const { name, email } = newData
+            return actions.updateStudent(newData.id, { email, name })
+              .then(() => flashSuccess('Student updated.'))
+              .catch(flashError)
           },
         } }
         options={ {
