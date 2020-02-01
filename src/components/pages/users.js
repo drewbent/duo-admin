@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 
-import { fetchUsers, updateUser } from 'services/users-service'
+import { deleteUser, fetchUsers, updateUser } from 'services/users-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 
 const mapStateToProps = state => ({
@@ -13,6 +13,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: {
+    deleteUser: deleteUser(dispatch),
     fetchUsers: fetchUsers(dispatch),
     updateUser: updateUser(dispatch),
   },
@@ -38,6 +39,11 @@ function Users(props) {
         ] }
         data={ props.users }
         editable={ { 
+          onRowDelete: async rowData => {
+            return actions.deleteUser(rowData.id)
+              .then(() => flashSuccess('User has been deleted'))
+              .catch(flashError)
+          },
           onRowUpdate: async rowData => {
             const { email, name } = rowData
             return actions.updateUser(rowData.id, { email, name })

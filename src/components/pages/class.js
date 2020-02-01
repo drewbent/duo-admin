@@ -110,7 +110,7 @@ function Class(props) {
           },
         ] }
         columns={ [
-          { title: 'ID', field: 'id' },
+          { title: 'ID', field: 'id', editable: false },
           { title: 'Name', field: 'name' },
           { title: 'Email', field: 'email', defaultSort: 'asc' },
         ] }
