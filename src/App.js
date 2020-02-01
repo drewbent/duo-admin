@@ -7,12 +7,14 @@ import AppBar from 'components/app-bar'
 import AuthRoute from 'components/authenticated-route'
 import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
+import Tabs from 'components/tabs'
 
 // Pages
 import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
 import Login from 'components/pages/login'
 import NotFound from 'components/pages/not-found'
+import Users from 'components/pages/users'
 
 import { fetchLoginStatus } from './services/auth-service'
 
@@ -42,6 +44,7 @@ function App(props) {
           <CssBaseline />
           <GlobalFlash />
           <AppBar />
+          <Tabs />
           <Switch>
             <Route component={ Login }
               exact
@@ -56,6 +59,9 @@ function App(props) {
             <AuthRoute component={ Class }
               exact
               path='/classes/:classId' />
+            <AuthRoute component={ Users }
+              exact
+              path='/users' />
             <Route component={ NotFound } />
           </Switch>
         </Router>
