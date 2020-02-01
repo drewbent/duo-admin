@@ -1,8 +1,15 @@
 import React from 'react'
 
+import MaterialTable from 'material-table'
+import Page from 'components/shared/page'
+
 function Users() {
   return (
-    <div>Hello</div>
+    <Page>
+      <MaterialTable 
+
+      />
+    </Page>
   )
 }
 

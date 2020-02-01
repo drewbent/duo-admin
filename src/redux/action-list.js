@@ -15,3 +15,6 @@ export const ADD_CLASS_STUDENTS = 'ADD_CLASS_STUDENTS'
 
 export const ADD_STUDENTS = 'ADD_STUDENTS'
 export const DELETE_STUDENT = 'DELETE_STUDENT'
+
+export const ADD_USERS = 'ADD_USERS'
+export const SET_USERS = 'SET_USERS'
