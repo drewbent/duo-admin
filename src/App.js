@@ -7,7 +7,6 @@ import AppBar from 'components/app-bar'
 import AuthRoute from 'components/authenticated-route'
 import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
-import Tabs from 'components/tabs'
 
 // Pages
 import Class from 'components/pages/class'
@@ -40,30 +39,31 @@ function App(props) {
   } else {
     return (
       <ThemeProvider theme={ theme }>
+        <CssBaseline />
         <Router>
-          <CssBaseline />
-          <GlobalFlash />
-          <AppBar />
-          <Tabs />
-          <Switch>
-            <Route component={ Login }
-              exact
-              path='/login' />
-            <Route
-              exact
-              path='/'
-              render={ () => <Redirect to='/classes' /> } />
-            <AuthRoute component={ Classes }
-              exact
-              path='/classes' />
-            <AuthRoute component={ Class }
-              exact
-              path='/classes/:classId' />
-            <AuthRoute component={ Users }
-              exact
-              path='/users' />
-            <Route component={ NotFound } />
-          </Switch>
+          <AppBar>
+            <GlobalFlash />
+            <Switch>
+              <Route component={ Login }
+                exact
+                path='/login' />
+              <Route
+                exact
+                path='/'
+                render={ () => <Redirect to='/classes' /> } />
+              <AuthRoute component={ Classes }
+                exact
+                path='/classes' />
+              <AuthRoute component={ Class }
+                exact
+                path='/classes/:classId' />
+              <AuthRoute component={ Users }
+                exact
+                path='/users' />
+              <Route component={ NotFound } />
+            </Switch>
+            {props.children}
+          </AppBar>
         </Router>
       </ThemeProvider>
     )
