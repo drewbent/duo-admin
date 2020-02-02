@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
@@ -51,6 +52,7 @@ function Users(props) {
               .catch(flashError)
           },
         } }
+        onRowClick={ (_, rowData) => props.history.push(`/users/${rowData.id}`) }
         options={ {
           actionsColumnIndex: 3,
           pageSize: 10,
@@ -61,4 +63,4 @@ function Users(props) {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Users))

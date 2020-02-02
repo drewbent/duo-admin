@@ -19,3 +19,7 @@ export const DELETE_STUDENT = 'DELETE_STUDENT'
 export const ADD_USERS = 'ADD_USERS'
 export const SET_USERS = 'SET_USERS'
 export const DELETE_USER = 'DELETE_USER'
+
+export const SET_USER_COMPLETIONS = 'SET_USER_COMPLETIONS'
+
+export const ADD_COMPLETIONS = 'ADD_COMPLETIONS'
