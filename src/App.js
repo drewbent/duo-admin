@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 
 import AppBar from 'components/app-bar'
 import AuthRoute from 'components/authenticated-route'
+import Breadcrumbs from 'components/breadcrumbs'
 import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
 
@@ -42,6 +43,7 @@ function App(props) {
         <CssBaseline />
         <Router>
           <AppBar>
+            <Breadcrumbs />
             <GlobalFlash />
             <Switch>
               <Route component={ Login }
