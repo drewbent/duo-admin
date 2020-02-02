@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { Breadcrumbs as MaterialBreadcrumbs, makeStyles } from '@material-ui/core'
 import { withRouter } from 'react-router'
 
+const blacklist = ['/login']
+
 const useStyles = makeStyles(theme => ({
   container: {
     marginBottom: theme.spacing(2),
@@ -16,6 +18,10 @@ const useStyles = makeStyles(theme => ({
 function Breadcrumbs() {
   const classes = useStyles()
   const pathnames = window.location.pathname.split('/').filter(x => x)
+
+  if (blacklist.includes(window.location.pathname)) {
+    return null
+  }
 
   if (pathnames.length === 0) {
     return null
