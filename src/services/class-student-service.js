@@ -13,6 +13,10 @@ export const fetchClassStudents = dispatch => async(classId) => {
   ])
 }
 
+export const fetchClassStudent = dispatch => async(id) => {
+  console.log(`Fetching student ${id}`)
+}
+
 export const createClassStudent = dispatch => async(classId, email) => {
   console.log(`Adding ${email} to class ${classId}`)
   const { data: student } = await api.post(`/classes/${classId}/students`, { email })

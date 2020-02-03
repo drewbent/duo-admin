@@ -117,11 +117,6 @@ function Class(props) {
         ] }
         data={ props.students }
         editable={ {
-          onRowDelete: async newData => {
-            return actions.deleteStudent(newData.id)
-              .then(() => flashSuccess('Student deleted.'))
-              .catch(flashError)
-          },
           onRowUpdate: async newData => {
             const { name, email } = newData
             return actions.updateStudent(newData.id, { email, name })
