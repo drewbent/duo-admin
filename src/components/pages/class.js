@@ -112,7 +112,8 @@ function Class(props) {
         columns={ [
           { title: 'ID', field: 'id', editable: false },
           { title: 'Name', field: 'name' },
-          { title: 'Email', field: 'email', defaultSort: 'asc' },
+          { title: 'Email', field: 'email', editable: false, defaultSort: 'asc' },
+          { title: 'Firebase ID', field: 'firebase_id' },
         ] }
         data={ props.students }
         editable={ {
@@ -129,7 +130,7 @@ function Class(props) {
           },
         } }
         options={ {
-          actionsColumnIndex: 3,
+          actionsColumnIndex: 4,
           paging: false,
         } }
         title={ `Students for ${props.classSection.name}` }
