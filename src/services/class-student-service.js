@@ -15,6 +15,8 @@ export const fetchClassStudents = dispatch => async(classId) => {
 
 export const fetchClassStudent = dispatch => async(id) => {
   console.log(`Fetching student ${id}`)
+  const { data: student } = await api.get(`/students/${id}`)
+  return dispatch(addStudents([student]))
 }
 
 export const createClassStudent = dispatch => async(classId, email) => {

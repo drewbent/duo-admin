@@ -14,8 +14,7 @@ import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
 import Login from 'components/pages/login'
 import NotFound from 'components/pages/not-found'
-import User from 'components/pages/user'
-import Users from 'components/pages/users'
+import Student from 'components/pages/student'
 
 import { fetchLoginStatus } from './services/auth-service'
 
@@ -60,12 +59,12 @@ function App(props) {
               <AuthRoute component={ Class }
                 exact
                 path='/classes/:classId' />
-              <AuthRoute component={ Users }
+              <AuthRoute component={ Class }
                 exact
-                path='/users' />
-              <AuthRoute component={ User }
+                path='/classes/:classId/students' />
+              <AuthRoute component={ Student }
                 exact
-                path='/users/:userId' />
+                path='/classes/:classId/students/:studentId' />
               <Route component={ NotFound } />
             </Switch>
             {props.children}

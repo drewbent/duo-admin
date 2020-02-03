@@ -4,16 +4,16 @@ import { connect } from 'react-redux'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 
-import { fetchCompletionsForUser } from 'services/completions-service'
-import { fetchUser } from 'services/users-service'
+import { fetchClassStudent } from 'services/class-student-service'
+import { fetchCompletionsForStudent } from 'services/completions-service'
 import { flashError } from 'components/global-flash'
 
-const getUserId = props => (
-  props.match.params.userId
+const getStudentId = props => (
+  props.match.params.studentId
 )
 
 const mapStateToProps = (state, ownProps) => {
-  const userId = getUserId(ownProps)
+  const userId = getStudentId(ownProps)
 
   return {
     user: state.Users[userId] || {},
@@ -22,12 +22,12 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const userId = getUserId(ownProps)
+  const studentId = getStudentId(ownProps)
   
   return {
     actions: {
-      fetchUser: () => fetchUser(dispatch)(userId),
-      fetchComplations: () => fetchCompletionsForUser(dispatch)(userId),
+      fetchStudent: () => fetchClassStudent(dispatch)(studentId),
+      fetchComplations: () => fetchCompletionsForStudent(dispatch)(studentId),
     },
   }
 }
@@ -39,7 +39,7 @@ function User(props) {
   if (!hasFetchedData) {
     setHasFetchedData(true)
     Promise.all([
-      actions.fetchUser(),
+      actions.fetchStudent(),
       actions.fetchComplations(),
     ]).catch(flashError)
   }
@@ -55,11 +55,15 @@ function User(props) {
           { title: 'Mastery Category', field: 'mastery_category' },
           { title: '# Correct', field: 'questions_correct' },
           { title: '# Questions', field: 'questions_out_of' },
+          { title: 'Mastery Points', field: 'mastery_points' },
           { title: 'Recorded From', field: 'recorded_from' },
-          { title: 'Time', field: 'created_at' },
+          { title: 'Recorded At', field: 'created_at', defaultSort: 'desc' },
         ] }
         data={ props.completions }
-        title={ props.user ? `${props.user.name}'s Skill Completion` : 'Skill Completion' }
+        options={ { 
+          pageSize: 10,
+        } }
+        title={ props.student ? `${props.student.name}'s Skill Completion` : 'Skill Completion' }
       />
     </Page>
   )

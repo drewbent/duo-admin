@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
@@ -45,6 +46,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 function Class(props) {
+  const classId = getClassId(props)
   const { actions } = props
   const [createMultiDialogOpen, setCreateMultiDialogOpen] = useState(false)
   const [createMultiDialogLoading, setCreateMultiDialogLoading] = useState(false)
@@ -124,6 +126,7 @@ function Class(props) {
               .catch(flashError)
           },
         } }
+        onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/students/${rowData.id}`) }
         options={ {
           actionsColumnIndex: 4,
           paging: false,
@@ -134,4 +137,4 @@ function Class(props) {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Class)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Class))

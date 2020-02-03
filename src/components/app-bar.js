@@ -33,11 +33,6 @@ const links = [
     icon: 'school',
     route: '/classes',
   },
-  {
-    title: 'Users',
-    icon: 'group',
-    route: '/users',
-  },
 ]
 
 const drawerWidth = 240
