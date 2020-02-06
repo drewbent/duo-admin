@@ -57,10 +57,16 @@ function User(props) {
           { title: '# Questions', field: 'questions_out_of' },
           { title: 'Mastery Points', field: 'mastery_points' },
           { title: 'Recorded From', field: 'recorded_from' },
-          { title: 'Recorded At', field: 'created_at', defaultSort: 'desc' },
+          { 
+            title: 'Recorded At', 
+            field: 'created_at',
+            customSort: (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at),
+            defaultSort: 'desc'
+          },
         ] }
         data={ props.completions }
         options={ { 
+          sorting: true,
           pageSize: 10,
         } }
         title={ props.student ? `${props.student.name}'s Skill Completion` : 'Skill Completion' }
