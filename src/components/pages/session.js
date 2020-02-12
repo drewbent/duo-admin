@@ -111,7 +111,10 @@ function FeedbackQuestions({ questions, classes }) {
   return (
     <div>
       {Object.keys(questions).map(question => (
-        <div className={ classes.feedbackQuestion }>
+        <div 
+          className={ classes.feedbackQuestion }
+          key={ question.question }
+        >
           <Typography className={ classes.questionText }>{question}</Typography>
           <Typography>{questions[question]}</Typography>
         </div>

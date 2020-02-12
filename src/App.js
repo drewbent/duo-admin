@@ -15,6 +15,7 @@ import Classes from 'components/pages/classes'
 import Login from 'components/pages/login'
 import NotFound from 'components/pages/not-found'
 import Session from 'components/pages/session'
+import SessionFeed from 'components/pages/session-feed'
 import Student from 'components/pages/student'
 
 import { fetchLoginStatus } from './services/auth-service'
@@ -64,6 +65,11 @@ function App(props) {
                 path='/classes/:classId/sessions/:sessionId' />
               <AuthRoute component={ Class }
                 path='/classes/:classId' />
+              <AuthRoute component={ Session }
+                exact
+                path='/session-feed/sessions/:sessionId' />
+              <AuthRoute component={ SessionFeed }
+                path='/session-feed' />
               <Route component={ NotFound } />
             </Switch>
             {props.children}

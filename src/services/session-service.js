@@ -18,3 +18,9 @@ export const fetchSession = dispatch => async id => {
   const { data } = await api.get(`/tutoring-sessions/${id}`)
   return dispatch(addSessions([data]))
 }
+
+export const fetchSessions = dispatch => async() => {
+  console.log('Fetching all sessions')
+  const { data } = await api.get('/tutoring-sessions')
+  return dispatch(addSessions(data))
+}

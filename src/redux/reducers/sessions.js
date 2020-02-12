@@ -1,6 +1,8 @@
 import 'utils/array-utils'
 import { ADD_SESSIONS } from '../action-list'
 
+import { isToday } from 'utils/date-utils'
+
 /** Mapping of sessionId => session  */
 const initialState = {}
 
@@ -14,4 +16,8 @@ export default (state = initialState, action) => {
     default:
       return state
   }
+}
+
+export const getTodaysSessions = state => {
+  return Object.values(state.Sessions).filter(session => isToday(session.start_time))
 }

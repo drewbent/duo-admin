@@ -33,6 +33,11 @@ const links = [
     icon: 'school',
     route: '/classes',
   },
+  {
+    title: 'Session Feed',
+    icon: 'dynamic_feed',
+    route: '/session-feed',
+  },
 ]
 
 const drawerWidth = 240

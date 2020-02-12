@@ -155,14 +155,8 @@ function Class(props) {
       </div>
       <MaterialTable
         columns={ [
-          {
-            title: 'ID',
-            field: 'id',
-          },
-          {
-            title: 'Skill',
-            field: 'skill',
-          },
+          { title: 'ID', field: 'id' },
+          { title: 'Skill', field: 'skill' },
           {
             title: 'Guide',
             render: rowData => (props.allStudents[rowData.guide_id] || {}).name,
