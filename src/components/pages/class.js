@@ -6,6 +6,7 @@ import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
+import { makeStyles } from '@material-ui/core'
 
 import { 
   createClassStudents,
@@ -14,7 +15,14 @@ import {
   updateStudent,
 } from 'services/class-student-service'
 import { fetchClass } from 'services/classes-service'
+import { fetchSessionsForClass } from 'services/session-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+
+const useStyles = makeStyles(theme => ({
+  section: {
+    marginBottom: theme.spacing(2),
+  },
+}))
 
 function getClassId(props) {
   return props.match.params.classId
@@ -22,11 +30,16 @@ function getClassId(props) {
 
 const mapStateToProps = (state, ownProps) => {
   const classId = getClassId(ownProps)
+  const allStudents = state.Students
 
   return {
     classSection: state.Classes[classId],
     students: ((state.ClassStudents[classId] || [])
-      .map(studentId => state.Students[studentId]) || [])
+      .map(studentId => allStudents[studentId]) || [])
+      .filter(x => x),
+    allStudents,
+    sessions: (state.ClassSessions[classId] || [])
+      .map(sessionId => state.Sessions[sessionId])
       .filter(x => x),
   }
 }
@@ -39,6 +52,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       createClassStudents: data => createClassStudents(dispatch)(classId, data),
       deleteStudent: id => deleteStudent(dispatch)(classId, id),
       fetchClass: () => fetchClass(dispatch)(classId),
+      fetchSessions: () => fetchSessionsForClass(dispatch)(classId),
       fetchClassStudents: () => fetchClassStudents(dispatch)(classId),
       updateStudent: (id, data) => updateStudent(dispatch)(classId, id, data),
     },
@@ -46,8 +60,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 function Class(props) {
-  const classId = getClassId(props)
   const { actions } = props
+  const classId = getClassId(props)
+  const classes = useStyles()
   const [createMultiDialogOpen, setCreateMultiDialogOpen] = useState(false)
   const [createMultiDialogLoading, setCreateMultiDialogLoading] = useState(false)
   const [hasFetchedData, setHasFetchedData] = useState(false)
@@ -57,6 +72,7 @@ function Class(props) {
     Promise.all([
       actions.fetchClass(),
       actions.fetchClassStudents(),
+      actions.fetchSessions(),
     ])
       .catch(err => flashError(err.message))
   }
@@ -102,36 +118,56 @@ function Class(props) {
         } }
         title='Add Student Emails'
       />
+      <div className={ classes.section }>
+        <MaterialTable
+          actions={ [
+            {
+              title: 'Add Multiple Students',
+              icon: 'queue',
+              isFreeAction: true,
+              onClick: () => setCreateMultiDialogOpen(true),
+            },
+          ] }
+          columns={ [
+            { title: 'ID', field: 'id', editable: false },
+            { title: 'Name', field: 'name' },
+            { title: 'Email', field: 'email', editable: false, defaultSort: 'asc' },
+            { title: 'Firebase ID', field: 'firebase_id' },
+          ] }
+          data={ props.students }
+          editable={ {
+            onRowUpdate: async newData => {
+              const { name, email } = newData
+              return actions.updateStudent(newData.id, { email, name })
+                .then(() => flashSuccess('Student updated.'))
+                .catch(flashError)
+            },
+          } }
+          onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/students/${rowData.id}`) }
+          options={ {
+            actionsColumnIndex: 4,
+            pageSize: 5,
+          } }
+          title={ `Students for ${props.classSection.name}` }
+        />
+      </div>
       <MaterialTable
-        actions={ [
-          {
-            title: 'Add Multiple Students',
-            icon: 'queue',
-            isFreeAction: true,
-            onClick: () => setCreateMultiDialogOpen(true),
-          },
-        ] }
         columns={ [
-          { title: 'ID', field: 'id', editable: false },
-          { title: 'Name', field: 'name' },
-          { title: 'Email', field: 'email', editable: false, defaultSort: 'asc' },
-          { title: 'Firebase ID', field: 'firebase_id' },
-        ] }
-        data={ props.students }
-        editable={ {
-          onRowUpdate: async newData => {
-            const { name, email } = newData
-            return actions.updateStudent(newData.id, { email, name })
-              .then(() => flashSuccess('Student updated.'))
-              .catch(flashError)
+          {
+            title: 'ID',
+            field: 'id',
           },
-        } }
-        onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/students/${rowData.id}`) }
-        options={ {
-          actionsColumnIndex: 4,
-          paging: false,
-        } }
-        title={ `Students for ${props.classSection.name}` }
+          {
+            title: 'Guide',
+            render: rowData => (props.allStudents[rowData.guide_id] || {}).name,
+          },
+          {
+            title: 'Learner',
+            render: rowData => (props.allStudents[rowData.learner_id] || {}).name,
+          },
+        ] }
+        data={ props.sessions }
+        title='Sessions'
       />
     </Page>
   )

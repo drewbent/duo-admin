@@ -167,7 +167,7 @@ function AppBar(props) {
             onClick={ () => {} }
             onMouseEnter={ () => setPopoverOpen(true) }
           >
-            <Person />
+            <Person style={ { color: 'white' } } />
           </IconButton>
         </Toolbar>
       </MAppBar>
