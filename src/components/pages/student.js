@@ -17,7 +17,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     user: state.Users[userId] || {},
-    completions: (state.UserCompletions[userId] || []).map(id => state.Completions[id])
+    completions: (state.UserCompletions[userId] || []).map(id => state.Completions[id]),
   }
 }
 
@@ -61,7 +61,7 @@ function User(props) {
             title: 'Recorded At', 
             field: 'created_at',
             customSort: (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at),
-            defaultSort: 'desc'
+            defaultSort: 'desc',
           },
         ] }
         data={ props.completions }

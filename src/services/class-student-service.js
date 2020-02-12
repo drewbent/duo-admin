@@ -4,6 +4,12 @@ import * as api from 'utils/api'
 import { addClassStudents, deleteClassStudent, setClassStudents } from 'redux/actions/class-students'
 import { addStudents, deleteStudent as deleteStudentRedux } from 'redux/actions/students'
 
+export const fetchAllStudents = dispatch => async() => {
+  console.log('Fetching all students')
+  const { data: students } = await api.get('/students')
+  return dispatch(addStudents(students))
+}
+
 export const fetchClassStudents = dispatch => async(classId) => {
   console.log(`Fetching students for class ${classId}`)
   const { data: students } = await api.get(`/classes/${classId}/students`)

@@ -12,3 +12,15 @@ export const fetchCompletionsForStudent = dispatch => async studentId => {
     dispatch(setUserCompletions(studentId, data.objValues('id'))),
   ])
 }
+
+export const fetchCompletionBeforeSession = dispatch => async sessionId => {
+  console.log(`Fetching completion before session ${sessionId}`)
+  const { data } = await api.get(`/tutoring-sessions/${sessionId}/completion-before`)
+  return dispatch(addCompletions([data]))
+}
+
+export const fetchCompletionAfterSession = dispatch => async sessionId => {
+  console.log(`Fetching completion after session ${sessionId}`)
+  const { data } = await api.get(`/tutoring-sessions/${sessionId}/completion-after`)
+  return dispatch(addCompletions([data]))
+}

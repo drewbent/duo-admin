@@ -18,6 +18,8 @@ import { fetchClass } from 'services/classes-service'
 import { fetchSessionsForClass } from 'services/session-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 
+import { formatDateTime } from 'utils/date-utils'
+
 const useStyles = makeStyles(theme => ({
   section: {
     marginBottom: theme.spacing(2),
@@ -165,8 +167,21 @@ function Class(props) {
             title: 'Learner',
             render: rowData => (props.allStudents[rowData.learner_id] || {}).name,
           },
+          {
+            title: 'Start',
+            render: rowData => formatDateTime(rowData.start_time),
+          },
+          {
+            title: 'End',
+            render: rowData => rowData.end_time ? formatDateTime(rowData.end_time) : '',
+          },
+          {
+            title: 'Cancelled',
+            render: rowData => rowData.end_time ? (rowData.cancellation_reason ? 'True' : 'False') : '',
+          },
         ] }
         data={ props.sessions }
+        onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/sessions/${rowData.id}`) }
         title='Sessions'
       />
     </Page>

@@ -5,13 +5,13 @@ import { ADD_SESSIONS } from '../action-list'
 const initialState = {}
 
 export default (state = initialState, action) => {
-    const { sessions } = action
+  const { sessions } = action
 
-    switch (action.type) {
-        case ADD_SESSIONS:
-            console.log(`Redux: Adding ${sessions.length} sessions`)
-            return { ...state, ...sessions.toObject('id') }
-        default:
-            return state
-    }
+  switch (action.type) {
+    case ADD_SESSIONS:
+      console.log(`Redux: Adding ${sessions.length} sessions`)
+      return { ...state, ...sessions.toObject('id') }
+    default:
+      return state
+  }
 }
