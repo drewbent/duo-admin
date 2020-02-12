@@ -150,7 +150,7 @@ function Class(props) {
             actionsColumnIndex: 4,
             pageSize: 5,
           } }
-          title={ `Students for ${props.classSection.name}` }
+          title={ `Students in ${props.classSection.name}` }
         />
       </div>
       <MaterialTable
@@ -158,6 +158,10 @@ function Class(props) {
           {
             title: 'ID',
             field: 'id',
+          },
+          {
+            title: 'Skill',
+            field: 'skill',
           },
           {
             title: 'Guide',
@@ -170,6 +174,8 @@ function Class(props) {
           {
             title: 'Start',
             render: rowData => formatDateTime(rowData.start_time),
+            customSort: (a, b) => Date.parse(a.start_time) - Date.parse(b.start_time),
+            defaultSort: 'desc',
           },
           {
             title: 'End',

@@ -61,7 +61,6 @@ function App(props) {
                 exact
                 path='/classes/:classId/students/:studentId' />
               <AuthRoute component={ Session }
-                exact
                 path='/classes/:classId/sessions/:sessionId' />
               <AuthRoute component={ Class }
                 path='/classes/:classId' />
