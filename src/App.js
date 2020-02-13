@@ -12,6 +12,7 @@ import SplashScreen from 'components/pages/splash-screen'
 // Pages
 import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
+import Forms from 'components/pages/forms'
 import Login from 'components/pages/login'
 import NotFound from 'components/pages/not-found'
 import Session from 'components/pages/session'
@@ -68,6 +69,9 @@ function App(props) {
               <AuthRoute component={ Session }
                 exact
                 path='/session-feed/sessions/:sessionId' />
+              <AuthRoute component={ Forms }
+                exact
+                path='/forms' />
               <AuthRoute component={ SessionFeed }
                 path='/session-feed' />
               <Route component={ NotFound } />

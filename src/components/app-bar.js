@@ -34,6 +34,11 @@ const links = [
     route: '/classes',
   },
   {
+    title: 'Forms',
+    icon: 'list_alt',
+    route: '/forms',
+  },
+  {
     title: 'Session Feed',
     icon: 'dynamic_feed',
     route: '/session-feed',
