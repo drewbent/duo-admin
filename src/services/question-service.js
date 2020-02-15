@@ -4,14 +4,16 @@ import { addQuestions } from 'redux/actions/questions'
 import { setQuestionTypes } from 'redux/actions/question-types'
 
 export const createQuestion = dispatch => async data => {
-  console.log('Creating question')
+  console.log(data)
   const { data: question } = await api.post('/questions', data)
   return dispatch(addQuestions([question]))
 }
 
-export const fetchAllQuestions = dispatch => async() => {
+export const fetchAllQuestions = dispatch => async(includeNumQuestions) => {
   console.log('Fetching all questions')
-  const { data: questions } = await api.get('/questions')
+  let path = '/questions'
+  if (includeNumQuestions) path += '?num_responses=true'
+  const { data: questions } = await api.get(path)
   return dispatch(addQuestions(questions))
 }
 

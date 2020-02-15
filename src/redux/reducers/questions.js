@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
 
   switch (action.type) {
     case ADD_QUESTIONS:
-      console.log(`Adding ${questions.length} questions`)
+      console.log(`Redux: Adding ${questions.length} questions`)
       return { ...state, ...questions.toObject('id') }
     default:
       return state

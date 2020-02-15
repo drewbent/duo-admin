@@ -5,6 +5,7 @@ import ClassStudents from './reducers/class-students'
 import Classes from './reducers/classes'
 import Completions from './reducers/completions'
 import CurrentUser from './reducers/current-user'
+import Forms from './reducers/forms'
 import GlobalFlash from './reducers/global-flash'
 import QuestionTypes from './reducers/question-types'
 import Questions from './reducers/questions'
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   Classes,
   Completions,
   CurrentUser,
+  Forms,
   GlobalFlash,
   QuestionTypes,
   Questions,

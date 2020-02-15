@@ -33,7 +33,7 @@ function TextFieldDialog(props) {
 TextFieldDialog.propTypes = {
   title: PropTypes.string,
   textFieldProps: PropTypes.object,
-
+  /** Passes the text field value */
   onConfirm: PropTypes.func,
   onClose: PropTypes.func,
   open: PropTypes.bool,
