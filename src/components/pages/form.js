@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
+import CreateQuestionDialog from 'components/shared/dialogs/create-question-dialog'
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
+import SelectQuestionDialog from 'components/shared/dialogs/select-question-dialog'
 
 import { fetchForm } from 'services/form-service'
 import { flashError, flashSuccess } from 'components/global-flash'
@@ -31,6 +33,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 function Form(props) {
   const { actions, form } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createDialogLoading, setCreateDialogLoading] = useState(false)
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [addDialogLoading, setAddDialogLoading] = useState(false)
   
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -44,17 +50,35 @@ function Form(props) {
   
   return (
     <Page>
+      <CreateQuestionDialog 
+        loading={ createDialogLoading }
+        onClose={ () => setCreateDialogOpen(false) }
+        onConfirm={ data => {
+
+        } }
+        open={ createDialogOpen }
+      />
+      <SelectQuestionDialog 
+        loading={ addDialogLoading }
+        onClose={ () => setAddDialogOpen(false) }
+        onSelect={ question => {
+
+        } }
+        open={ addDialogOpen }
+      />
       <MaterialTable
         actions={ [
           {
-            tooltip: 'Add new question',
-            icon: 'playlist_add',
-            onClick: () => {},
-          },
-          {
             tooltip: 'Add existing question',
             icon: 'add_box',
-            onClick: () => {},
+            isFreeAction: true,
+            onClick: () => setAddDialogOpen(true),
+          },
+          {
+            tooltip: 'Add new question',
+            icon: 'playlist_add',
+            isFreeAction: true,
+            onClick: () => setCreateDialogOpen(true),
           },
         ] }
         title={ form.name }

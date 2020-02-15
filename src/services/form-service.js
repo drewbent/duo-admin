@@ -11,7 +11,6 @@ export const fetchAllForms = dispatch => async() => {
 export const fetchForm = dispatch => async(id) => {
   console.log(`Fetching form with id ${id}`)
   const { data } = await api.get(`/forms/${id}`)
-  console.log(data)
   return dispatch(addForms([data]))
 }
 
