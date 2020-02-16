@@ -1,6 +1,7 @@
 import QuestionType from 'models/question-type'
 
 export function getOptionsDesc(question) {
+  if (question == null) return ''
   const { options } = question
 
   switch (question.question_type) {
