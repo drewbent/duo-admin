@@ -5,7 +5,7 @@ import { addQuestions } from 'redux/actions/questions'
 import { setQuestionTypes } from 'redux/actions/question-types'
 
 export const createQuestion = dispatch => async data => {
-  console.log(data)
+  console.log('Creating question')
   const { data: question } = await api.post('/questions', data)
   return dispatch(addQuestions([question]))
 }

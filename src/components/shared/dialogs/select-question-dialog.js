@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import Loader from 'components/shared/loader'
-import MaterialTable, { MTableBodyRow } from 'material-table'
+import MaterialTable from 'material-table'
 import { Dialog } from '@material-ui/core'
 
 import { fetchAllQuestions } from 'services/question-service'
