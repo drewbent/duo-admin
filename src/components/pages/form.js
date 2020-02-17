@@ -6,10 +6,11 @@ import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import SelectQuestionDialog from 'components/shared/dialogs/select-question-dialog'
+import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 import { Switch } from '@material-ui/core'
 
 import { createQuestionForForm, fetchAllQuestions } from 'services/question-service'
-import { fetchForm } from 'services/form-service'
+import { fetchForm, updateForm } from 'services/form-service'
 import { fetchFormQuestionsForForm, updateFormQuestion, updateFormQuestionIndex } from 'services/form-question-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 import { getFormQuestionsForForm } from 'redux/reducers/form-questions'
@@ -37,6 +38,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       setFormQuestionRequired: (id, required) => updateFormQuestion(dispatch)(id, { required }),
       archiveFormQuestion: id => updateFormQuestion(dispatch)(id, { archive: true }),
       fetchForm: () => fetchForm(dispatch)(formId),
+      updateForm: data => updateForm(dispatch)(formId, data),
       updateFormQuestionIndex: updateFormQuestionIndex(dispatch),
       fetchAllQuestions: fetchAllQuestions(dispatch),
     },
@@ -46,6 +48,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 function Form(props) {
   const { actions, form } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [editDialogLoading, setEditDialogLoading] = useState(false)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createDialogLoading, setCreateDialogLoading] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
@@ -65,6 +69,29 @@ function Form(props) {
   
   return (
     <Page>
+      <TextFieldDialog
+        initialValue={ form.name }
+        loading={ editDialogLoading }
+        onClose={ () => setEditDialogOpen(false) }
+        onConfirm={ name => {
+          setEditDialogLoading(true)
+          actions.updateForm({ name })
+            .then(() => {
+              setEditDialogLoading(false)
+              setEditDialogOpen(false)
+              flashSuccess('Form updated')
+            })
+            .catch(err => {
+              setEditDialogLoading(false)
+              flashError(err)
+            })
+        } }
+        open={ editDialogOpen }
+        textFieldProps={ {
+          label: 'Name',
+        } }
+        title='Edit Form'
+      />
       <CreateQuestionDialog 
         loading={ createDialogLoading }
         onClose={ () => setCreateDialogOpen(false) }
@@ -93,6 +120,12 @@ function Form(props) {
       />
       <MaterialTable
         actions={ [
+          {
+            tooltip: 'Edit Form Info',
+            icon: 'edit',
+            isFreeAction: true,
+            onClick: () => setEditDialogOpen(true),
+          },
           {
             tooltip: 'Add existing question',
             icon: 'add_box',

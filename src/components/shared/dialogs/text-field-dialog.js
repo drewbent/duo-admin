@@ -5,10 +5,10 @@ import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
 import { TextField } from '@material-ui/core'
 
 function TextFieldDialog(props) {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(props.initialValue || '')
 
   const onClose = () => {
-    setValue('')
+    setValue(props.initialValue || '')
     props.onClose()
   }
 
@@ -33,6 +33,7 @@ function TextFieldDialog(props) {
 TextFieldDialog.propTypes = {
   title: PropTypes.string,
   textFieldProps: PropTypes.object,
+  initialValue: PropTypes.string,
   /** Passes the text field value */
   onConfirm: PropTypes.func,
   onClose: PropTypes.func,

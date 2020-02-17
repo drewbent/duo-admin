@@ -20,3 +20,9 @@ export const createForm = dispatch => async(data) => {
   dispatch(addForms([form]))
   return form
 }
+
+export const updateForm = dispatch => async(id, data) => {
+  console.log(`Updating form ${id}`)
+  const { data: form } = await api.patch(`/forms/${id}`, data)
+  return dispatch(addForms([form]))
+}
