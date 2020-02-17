@@ -20,6 +20,18 @@ export const createQuestionForForm = dispatch => async(formId, questionData) => 
   ])
 }
 
+export const archiveQuestion = dispatch => async(id, archive) => {
+  console.log(`${archive ? 'Archiving' : 'Unarchiving'} question ${id}`)
+  const { data } = await api.patch(`/questions/${id}`, { archive })
+  return dispatch(addQuestions([data]))
+}
+
+export const updateQuestion = dispatch => async(id, data) => {
+  console.log(`Updating question ${id}`)
+  const { data: question } = await api.patch(`/questions/${id}`, data)
+  return dispatch(addQuestions([question]))
+}
+
 export const fetchAllQuestions = dispatch => async(includeNumQuestions) => {
   console.log('Fetching all questions')
   let path = '/questions'

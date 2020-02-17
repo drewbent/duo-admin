@@ -6,10 +6,10 @@ import CreateQuestionDialog from 'components/shared/dialogs/create-question-dial
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
-import { AppBar, Box, Tab, Tabs, Typography, makeStyles } from '@material-ui/core'
+import { AppBar, Box, Switch, Tab, Tabs, Typography, makeStyles } from '@material-ui/core'
 
+import { archiveQuestion, createQuestion, fetchAllQuestions, updateQuestion } from 'services/question-service'
 import { createForm, fetchAllForms } from 'services/form-service'
-import { createQuestion, fetchAllQuestions } from 'services/question-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 import { getOptionsDesc } from 'utils/question-utils'
 
@@ -35,6 +35,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: {
+    archiveQuestion: archiveQuestion(dispatch),
+    updateQuestion: updateQuestion(dispatch),
     createForm: createForm(dispatch),
     fetchForms: fetchAllForms(dispatch),
     createQuestion: createQuestion(dispatch),
@@ -202,6 +204,18 @@ function Forms(props) {
             { title: 'Question Type', field: 'question_type' },
             { title: 'Options', render: getOptionsDesc },
             { title: 'Responses', field: 'num_responses' },
+            {
+              title: 'Archived',
+              render: rowData => (
+                <Switch 
+                  checked={ rowData.archived_at != null }
+                  onChange={ e => {
+                    actions.archiveQuestion(rowData.id, e.target.checked)
+                      .catch(flashError)
+                  } }
+                />
+              ),
+            },
           ] }
           data={ Object.values(props.questions) }
           title='Questions'
