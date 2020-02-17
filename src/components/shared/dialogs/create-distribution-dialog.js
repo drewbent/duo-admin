@@ -1,10 +1,16 @@
+import 'date-fns'
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
 import ClassSelector from 'components/shared/selectors/class-selector'
 import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
+import DateFnsUtils from '@date-io/date-fns'
 import FormSelector from 'components/shared/selectors/form-selector'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { makeStyles } from '@material-ui/core'
+
+import { flashError } from 'components/global-flash'
+import { formatDateBackend } from 'utils/date-utils'
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -17,11 +23,33 @@ function CreateDistributionDialog(props) {
   const [formId, setFormId] = useState(-1)
   const [classId, setClassId] = useState(-1)
   const [date, setDate] = useState(new Date())
+
+  const getDistribution = () => {
+    if (classId === -1)
+      throw new Error('Must select a class.')
+
+    if (formId === -1)
+      throw new Error('Must select a form.')
+    
+    return {
+      class_section_id: classId,
+      form_id: formId,
+      applicable_date: formatDateBackend(date),
+    }
+  }
   
   return (
     <ConfirmDialog
       loading={ props.loading }
       onClose={ props.onClose }
+      onConfirm={ () => {
+        try {
+          const distribution = getDistribution()
+          props.onConfirm(distribution)
+        } catch (error) {
+          flashError(error)
+        }
+      } }
       open={ props.open }
       title={ props.title || 'Create Distribution' }
     >
@@ -36,6 +64,16 @@ function CreateDistributionDialog(props) {
           onChange={ id => setFormId(id) }
           value={ formId }
         />
+      </div>
+      <div className={ classes.section }>
+        <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+          <KeyboardDatePicker 
+            label='Applicable Date'
+            onChange={ setDate }
+            value={ date }
+            variant='inline'
+          />
+        </MuiPickersUtilsProvider>
       </div>
     </ConfirmDialog>
   )

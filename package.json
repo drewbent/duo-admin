@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.8.3",
     "@material-ui/icons": "^4.5.1",
+    "@material-ui/pickers": "^3.2.9",
     "axios": "^0.19.1",
+    "date-fns": "^2.9.0",
     "dateformat": "^3.0.3",
     "express": "^4.17.1",
     "material-table": "^1.55.0",
