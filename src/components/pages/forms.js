@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
+import CreateDistributionDialog from 'components/shared/dialogs/create-distribution-dialog'
 import CreateQuestionDialog from 'components/shared/dialogs/create-question-dialog'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
@@ -9,7 +10,9 @@ import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 import { AppBar, Box, Switch, Tab, Tabs, Typography, makeStyles } from '@material-ui/core'
 
 import { archiveQuestion, createQuestion, fetchAllQuestions, updateQuestion } from 'services/question-service'
+import { createDistribution, fetchDistributions } from 'services/distribution-service'
 import { createForm, fetchAllForms } from 'services/form-service'
+import { fetchClasses } from 'services/classes-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 import { getOptionsDesc } from 'utils/question-utils'
 
@@ -31,6 +34,8 @@ const useStyles = makeStyles(theme => ({
 const mapStateToProps = state => ({
   forms: state.Forms,
   questions: state.Questions,
+  distributions: state.Distributions,
+  classes: state.Classes,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -41,6 +46,9 @@ const mapDispatchToProps = dispatch => ({
     fetchForms: fetchAllForms(dispatch),
     createQuestion: createQuestion(dispatch),
     fetchQuestions: () => fetchAllQuestions(dispatch)(true),
+    createDistribution: createDistribution(dispatch),
+    fetchDistributions: fetchDistributions(dispatch),
+    fetchClasses: fetchClasses(dispatch),
   },
 })
 
@@ -76,6 +84,8 @@ function Forms(props) {
   const [hasFetchedData, setHasFetchedData] = useState(false)
   const [createFormDialogOpen, setCreateFormDialogOpen] = useState(false)
   const [createFormDialogLoading, setCreateFormDialogLoading] = useState(false)
+  const [createDistDialogOpen, setCreateDistDialogOpen] = useState(false)
+  const [createDistDialogLoading, setCreateDistDialogLoading] = useState(false)
   const [createQuestionDialogOpen, setCreateQuestionDialogOpen] = useState(false)
   const [createQuestionDialogLoading, setCreateQuestionDialogLoading] = useState(false)
   const [tab, setTab] = useState(0)
@@ -83,13 +93,33 @@ function Forms(props) {
   if (!hasFetchedData) {
     setHasFetchedData(true)
     Promise.all([
-      actions.fetchQuestions(),
       actions.fetchForms(),
+      actions.fetchDistributions(),
+      actions.fetchQuestions(),
+      actions.fetchClasses(),
     ]).catch(flashError)
   }
 
   return (
     <Page>
+      <CreateDistributionDialog
+        loading={ createDistDialogLoading }
+        onClose={ () => setCreateDistDialogOpen(false) }
+        onConfirm={ data => {
+          setCreateDistDialogLoading(true)
+          actions.createDistribution(data)
+            .then(() => {
+              setCreateDistDialogLoading(false)
+              setCreateDistDialogOpen(false)
+              flashSuccess('Distribution Created')
+            })
+            .catch(err => {
+              setCreateDistDialogLoading(false)
+              flashError(err)
+            })
+        } }
+        open={ createDistDialogOpen }
+      />
       <CreateQuestionDialog 
         loading={ createQuestionDialogLoading }
         onClose={ () => setCreateQuestionDialogOpen(false) }
@@ -233,7 +263,25 @@ function Forms(props) {
         index={ 3 }
         value={ tab }
       >
-        <MaterialTable 
+        <MaterialTable
+          actions={ [
+            {
+              tooltip: 'Create Distribution',
+              icon: 'add_box',
+              isFreeAction: true,
+              onClick: () => setCreateDistDialogOpen(true),
+            },
+          ] }
+          columns={ [
+            { title: 'ID', field: 'id' },
+            { title: 'Class', render: rowData => (props.classes[rowData.class_section_id] || {}).name },
+            { title: 'Form', render: rowData => (props.forms[rowData.form_id] || {}).name },
+            { title: 'Date', field: 'applicable_date', defaultSort: 'desc' },
+          ] }
+          data={ Object.values(props.distributions) }
+          options={ {
+            actionsColumnIndex: 4,
+          } }
           title='Distributions'
         />
       </TabPanel>

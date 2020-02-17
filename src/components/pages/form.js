@@ -10,10 +10,13 @@ import SelectQuestionDialog from 'components/shared/dialogs/select-question-dial
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 import { Switch, makeStyles } from '@material-ui/core'
 
+import { createDistribution, fetchDistributionsForForm } from 'services/distribution-service'
 import { createFormQuestion, fetchFormQuestionsForForm, updateFormQuestion, updateFormQuestionIndex } from 'services/form-question-service'
 import { createQuestionForForm, fetchAllQuestions } from 'services/question-service'
+import { fetchClasses } from 'services/classes-service'
 import { fetchForm, updateForm } from 'services/form-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+import { getDistributionsForForm } from 'redux/reducers/distributions'
 import { getFormQuestionsForForm } from 'redux/reducers/form-questions'
 import { getOptionsDesc } from 'utils/question-utils'
 
@@ -32,6 +35,8 @@ const mapStateToProps = (state, ownProps) => {
     form: state.Forms[formId],
     questions: getFormQuestionsForForm(state, formId)
       .map(fq => ({ formQuestion: fq, question: state.Questions[fq.question_id] })),
+    distributions: getDistributionsForForm(state, formId),
+    classes: state.Classes,
   }
 }
 
@@ -40,6 +45,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     actions: {
+      fetchClasses: fetchClasses(dispatch),
+      createDistribution: createDistribution(dispatch),
+      fetchDistributions: () => fetchDistributionsForForm(dispatch)(formId),
       createQuestion: data => createQuestionForForm(dispatch)(formId, data),
       addQuestionToForm: question_id => createFormQuestion(dispatch)({ form_id: formId, question_id }),
       fetchFormQuestions: () => fetchFormQuestionsForForm(dispatch)(formId),
@@ -59,7 +67,7 @@ function Form(props) {
   const [hasFetchedData, setHasFetchedData] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [editDialogLoading, setEditDialogLoading] = useState(false)
-  const [createDistDialogOpen, setCreateDistDialogOpen] = useState(true)
+  const [createDistDialogOpen, setCreateDistDialogOpen] = useState(false)
   const [createDistDialogLoading, setCreateDistDialogLoading] = useState(false)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createDialogLoading, setCreateDialogLoading] = useState(false)
@@ -72,6 +80,8 @@ function Form(props) {
       actions.fetchAllQuestions(),
       actions.fetchFormQuestions(),
       actions.fetchForm(),
+      actions.fetchDistributions(),
+      actions.fetchClasses(),
     ]).catch(flashError)
   }
 
@@ -104,10 +114,21 @@ function Form(props) {
         title='Edit Form'
       />
       <CreateDistributionDialog 
+        initialData={ { form_id: getFormId(props) } }
         loading={ createDistDialogLoading }
         onClose={ () => setCreateDistDialogOpen(false) }
         onConfirm={ data => {
-          console.log(data)
+          setCreateDistDialogLoading(true)
+          actions.createDistribution(data)
+            .then(() => {
+              setCreateDistDialogLoading(false)
+              setCreateDistDialogOpen(false)
+              flashSuccess('Distribution Created')
+            })
+            .catch(err => {
+              setCreateDistDialogLoading(false)
+              flashError(err)
+            })
         } }
         open={ createDistDialogOpen }
       />
@@ -226,6 +247,12 @@ function Form(props) {
               onClick: () => setCreateDistDialogOpen(true),
             },
           ] }
+          columns={ [
+            { title: 'ID', field: 'id' },
+            { title: 'Class', render: rowData => (props.classes[rowData.class_section_id] || {}).name },
+            { title: 'Date', field: 'applicable_date', defaultSort: 'desc' },
+          ] }
+          data={ props.distributions }
           title='Distributions'
         />
       </div>

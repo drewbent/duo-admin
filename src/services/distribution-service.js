@@ -1,0 +1,21 @@
+import * as api from 'utils/api'
+
+import { addDistributions, deleteDistribution as deleteDistributionRedux } from 'redux/actions/distributions'
+
+export const fetchDistributions = dispatch => async() => {
+  console.log('Fetching all distributions')
+  const { data } = await api.get('/form-distributions')
+  return dispatch(addDistributions(data))
+}
+
+export const createDistribution = dispatch => async data => {
+  console.log('Creating distribution')
+  const { data: distribution } = await api.post('/form-distributions', data)
+  return dispatch(addDistributions([distribution]))
+}
+
+export const fetchDistributionsForForm = dispatch => async formId => {
+  console.log(`Fetching distributions for form ${formId}`)
+  const { data } = await api.get(`/forms/${formId}/form-distributions`)
+  return dispatch(addDistributions(data))
+}

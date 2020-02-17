@@ -20,8 +20,9 @@ const useStyles = makeStyles(theme => ({
 
 function CreateDistributionDialog(props) {
   const classes = useStyles()
-  const [formId, setFormId] = useState(-1)
-  const [classId, setClassId] = useState(-1)
+  const initialData = props.initialData || {}
+  const [formId, setFormId] = useState(initialData.form_id || -1)
+  const [classId, setClassId] = useState(initialData.class_id || -1)
   const [date, setDate] = useState(new Date())
 
   const getDistribution = () => {
