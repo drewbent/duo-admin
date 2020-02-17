@@ -17,5 +17,6 @@ export default (state = initialState, action) => {
 }
 
 export const getFormQuestionsForForm = (state, formId) => (
-  Object.values(state.FormQuestions).filter(fq => fq.form_id === formId)
+  Object.values(state.FormQuestions)
+    .filter(fq => fq.form_id === formId && fq.archived_at == null)
 )
