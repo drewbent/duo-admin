@@ -9,9 +9,9 @@ import SelectQuestionDialog from 'components/shared/dialogs/select-question-dial
 import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 import { Switch } from '@material-ui/core'
 
+import { createFormQuestion, fetchFormQuestionsForForm, updateFormQuestion, updateFormQuestionIndex } from 'services/form-question-service'
 import { createQuestionForForm, fetchAllQuestions } from 'services/question-service'
 import { fetchForm, updateForm } from 'services/form-service'
-import { fetchFormQuestionsForForm, updateFormQuestion, updateFormQuestionIndex } from 'services/form-question-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 import { getFormQuestionsForForm } from 'redux/reducers/form-questions'
 import { getOptionsDesc } from 'utils/question-utils'
@@ -34,6 +34,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     actions: {
       createQuestion: data => createQuestionForForm(dispatch)(formId, data),
+      addQuestionToForm: question_id => createFormQuestion(dispatch)({ form_id: formId, question_id }),
       fetchFormQuestions: () => fetchFormQuestionsForForm(dispatch)(formId),
       setFormQuestionRequired: (id, required) => updateFormQuestion(dispatch)(id, { required }),
       archiveFormQuestion: id => updateFormQuestion(dispatch)(id, { archive: true }),
@@ -110,13 +111,28 @@ function Form(props) {
         } }
         open={ createDialogOpen }
       />
-      <SelectQuestionDialog 
+      <SelectQuestionDialog
+        blacklist={ props.questions
+          .map(data => data.question ? data.question.id : null) 
+          .filter(x => x)
+        }
         loading={ addDialogLoading }
         onClose={ () => setAddDialogOpen(false) }
         onSelect={ question => {
-          
+          setAddDialogLoading(true)
+          actions.addQuestionToForm(question.id)
+            .then(() => {
+              setAddDialogLoading(false)
+              setAddDialogOpen(false)
+              flashSuccess('Added question to form')
+            })
+            .catch(err => {
+              setAddDialogLoading(false)
+              flashError(err)
+            })
         } }
         open={ addDialogOpen }
+        title='Add Question'
       />
       <MaterialTable
         actions={ [

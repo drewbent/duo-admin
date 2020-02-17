@@ -19,3 +19,9 @@ export const updateFormQuestionIndex = dispatch => async(id, index) => {
   const { data } = await api.post(`/form-questions/${id}/index`, { index_in_form: index })
   return dispatch(addFormQuestions(data))
 }
+
+export const createFormQuestion = dispatch => async(data) => {
+  console.log('Creating form question')
+  const { data: form } = await api.post('/form-questions', data)
+  return dispatch(addFormQuestions([form]))
+}
