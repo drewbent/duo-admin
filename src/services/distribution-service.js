@@ -14,6 +14,12 @@ export const createDistribution = dispatch => async data => {
   return dispatch(addDistributions([distribution]))
 }
 
+export const deleteDistribution = dispatch => async id => {
+  console.log(`Deleting distribution with id ${id}`)
+  await api.del(`/form-distributions/${id}`)
+  return dispatch(deleteDistributionRedux(id))
+}
+
 export const fetchDistributionsForForm = dispatch => async formId => {
   console.log(`Fetching distributions for form ${formId}`)
   const { data } = await api.get(`/forms/${formId}/form-distributions`)

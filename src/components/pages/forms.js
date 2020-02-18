@@ -10,7 +10,7 @@ import TextFieldDialog from 'components/shared/dialogs/text-field-dialog'
 import { AppBar, Box, Switch, Tab, Tabs, Typography, makeStyles } from '@material-ui/core'
 
 import { archiveQuestion, createQuestion, fetchAllQuestions, updateQuestion } from 'services/question-service'
-import { createDistribution, fetchDistributions } from 'services/distribution-service'
+import { createDistribution, deleteDistribution, fetchDistributions } from 'services/distribution-service'
 import { createForm, fetchAllForms } from 'services/form-service'
 import { fetchClasses } from 'services/classes-service'
 import { flashError, flashSuccess } from 'components/global-flash'
@@ -47,6 +47,7 @@ const mapDispatchToProps = dispatch => ({
     createQuestion: createQuestion(dispatch),
     fetchQuestions: () => fetchAllQuestions(dispatch)(true),
     createDistribution: createDistribution(dispatch),
+    deleteDistribution: deleteDistribution(dispatch),
     fetchDistributions: fetchDistributions(dispatch),
     fetchClasses: fetchClasses(dispatch),
   },
@@ -280,8 +281,15 @@ function Forms(props) {
             { title: '# Responses', field: 'num_responses' },
           ] }
           data={ Object.values(props.distributions) }
+          editable={ {
+            onRowDelete: async rowData => {
+              actions.deleteDistribution(rowData.id)
+                .then(() => flashSuccess('Distribution deleted'))
+                .catch(flashError)
+            },
+          } }
           options={ {
-            actionsColumnIndex: 4,
+            actionsColumnIndex: 5,
           } }
           title='Distributions'
         />

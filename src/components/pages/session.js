@@ -232,7 +232,7 @@ function Session(props) {
           <Paper className={ classes.section }>
             <Toolbar className={ classes.toolbar }>
               <Typography variant='h6'>
-                Session Responses
+                Session Feedback
               </Typography>
               <div className={ classes.actionBar }>
                 <div className={ classes.responseSelectBar }>
@@ -277,8 +277,8 @@ function Session(props) {
                   <FeedbackViewer responses={ props.responses[feedbackKeys[currentFeedbackIndex]] } />
                 )
                 :
-                <Typography className={ classes.noResponsesText }>
-                  No Responses
+                <Typography className={ classes.noFeedbackText }>
+                  No feedback for this session.
                 </Typography>
             }
           </Paper>
