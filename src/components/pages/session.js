@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
+import CreateResponseDialog from 'components/shared/dialogs/create-response-dialog'
 import LineItem from 'components/shared/line-item'
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
-import { Paper, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import { AddBox } from '@material-ui/icons'
+import { IconButton, Paper, Toolbar, Tooltip, Typography, makeStyles } from '@material-ui/core'
 
 import { fetchAllStudents } from 'services/class-student-service'
 import { fetchCompletionAfterSession, fetchCompletionBeforeSession } from 'services/completions-service'
-import { fetchFeedback } from 'services/feedback-service'
+import { fetchResponsesForSession } from 'services/response-service'
 import { fetchSession } from 'services/session-service'
 import { flashError } from 'components/global-flash'
 
@@ -32,11 +34,20 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(3),
     paddingBottom: theme.spacing(2),
   },
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   questionText: {
     fontWeight: 'bold',
     marginBottom: theme.spacing(1),
   },
-  feedbackQuestion: {
+  noResponsesText: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    textAlign: 'center',
+  },
+  responseQuestion: {
     marginBottom: theme.spacing(2),
   },
 }))
@@ -50,7 +61,6 @@ const mapStateToProps = (state, ownProps) => {
     students: state.Students,
     before: beforeAfter ? state.Completions[beforeAfter.before] : undefined,
     after: beforeAfter ? state.Completions[beforeAfter.after] : undefined,
-    feedback: state.SessionFeedback[sessionId],
   }
 }
 
@@ -60,7 +70,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     actions: {
       fetchSession: () => fetchSession(dispatch)(sessionId),
-      fetchFeedback: () => fetchFeedback(dispatch)(sessionId),
+      fetchResponses: () => fetchResponsesForSession(dispatch)(sessionId),
       fetchCompletionBefore: () => fetchCompletionBeforeSession(dispatch)(sessionId),
       fetchCompletionAfter: () => fetchCompletionAfterSession(dispatch)(sessionId),
       fetchStudents: fetchAllStudents(dispatch),
@@ -127,12 +137,14 @@ function Session(props) {
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
+  const [createResponseDialogOpen, setCreateResponseDialogOpen] = useState(true)
+  const [createResponseDialogLoading, setCreateResponseDialogLoading] = useState(false)
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
     Promise.all([
       actions.fetchSession(),
-      actions.fetchFeedback(),
+      actions.fetchResponses(),
       actions.fetchCompletionBefore(),
       actions.fetchCompletionAfter(),
       actions.fetchStudents(),
@@ -152,6 +164,12 @@ function Session(props) {
       {props.session 
         ?
         <div>
+          <CreateResponseDialog 
+            loading={ createResponseDialogLoading }
+            onClose={ () => setCreateResponseDialogOpen(false) }
+            open={ createResponseDialogOpen }
+            session={ props.session }
+          />
           <Paper className={ classes.section }>
             <Toolbar>
               <Typography variant='h5'>
@@ -215,14 +233,25 @@ function Session(props) {
             />
           </div>
           <Paper className={ classes.section }>
-            <Toolbar>
+            <Toolbar className={ classes.toolbar }>
               <Typography variant='h6'>
-                Session Feedback
+                Session Responses
               </Typography>
+              <div>
+                <Tooltip
+                  title='Add Response'
+                >
+                  <IconButton
+                    onClick={ () => setCreateResponseDialogOpen(true) }
+                  >
+                    <AddBox />
+                  </IconButton>
+                </Tooltip>
+              </div>
             </Toolbar>
             <div className={ classes.content }>
               {
-                props.feedback ?
+                props.responses ?
                   (Object.keys(props.feedback).length === 0 ?
                     <Typography>No feedback for this session.</Typography>
                     :
@@ -231,7 +260,9 @@ function Session(props) {
                       questions={ props.feedback.questions } 
                     />)
                   :
-                  null
+                  <Typography className={ classes.noResponsesText }>
+                    No Responses
+                  </Typography>
               }
             </div>
           </Paper>

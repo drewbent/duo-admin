@@ -11,8 +11,8 @@ import Forms from './reducers/forms'
 import GlobalFlash from './reducers/global-flash'
 import QuestionTypes from './reducers/question-types'
 import Questions from './reducers/questions'
+import Responses from './reducers/responses'
 import SessionBeforeAfter from './reducers/session-before-after'
-import SessionFeedback from './reducers/session-feedback'
 import Sessions from './reducers/sessions'
 import Students from './reducers/students'
 import UserCompletions from './reducers/user-completions'
@@ -30,8 +30,8 @@ const reducers = combineReducers({
   GlobalFlash,
   QuestionTypes,
   Questions,
+  Responses,
   SessionBeforeAfter,
-  SessionFeedback,
   Sessions,
   Students,
   UserCompletions,
