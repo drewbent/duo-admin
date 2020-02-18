@@ -251,6 +251,7 @@ function Form(props) {
             { title: 'ID', field: 'id' },
             { title: 'Class', render: rowData => (props.classes[rowData.class_section_id] || {}).name },
             { title: 'Date', field: 'applicable_date', defaultSort: 'desc' },
+            { title: '# Responses', field: 'num_responses' },
           ] }
           data={ props.distributions }
           title='Distributions'

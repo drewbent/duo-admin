@@ -277,6 +277,7 @@ function Forms(props) {
             { title: 'Class', render: rowData => (props.classes[rowData.class_section_id] || {}).name },
             { title: 'Form', render: rowData => (props.forms[rowData.form_id] || {}).name },
             { title: 'Date', field: 'applicable_date', defaultSort: 'desc' },
+            { title: '# Responses', field: 'num_responses' },
           ] }
           data={ Object.values(props.distributions) }
           options={ {
