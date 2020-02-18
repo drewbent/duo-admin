@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
-import CreateResponseDialog from 'components/shared/dialogs/create-response-dialog'
+import CreateFeedbackDialog from 'components/shared/dialogs/create-feedback-dialog'
 import LineItem from 'components/shared/line-item'
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
@@ -9,11 +9,11 @@ import Page from 'components/shared/page'
 import { AddBox } from '@material-ui/icons'
 import { IconButton, Paper, Toolbar, Tooltip, Typography, makeStyles } from '@material-ui/core'
 
+import { createFeedback, fetchResponsesForSession } from 'services/response-service'
 import { fetchAllStudents } from 'services/class-student-service'
 import { fetchCompletionAfterSession, fetchCompletionBeforeSession } from 'services/completions-service'
-import { fetchResponsesForSession } from 'services/response-service'
 import { fetchSession } from 'services/session-service'
-import { flashError } from 'components/global-flash'
+import { flashError, flashSuccess } from 'components/global-flash'
 
 import * as DateUtils from 'utils/date-utils'
 
@@ -69,6 +69,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     actions: {
+      createFeedback: createFeedback(dispatch),
       fetchSession: () => fetchSession(dispatch)(sessionId),
       fetchResponses: () => fetchResponsesForSession(dispatch)(sessionId),
       fetchCompletionBefore: () => fetchCompletionBeforeSession(dispatch)(sessionId),
@@ -137,8 +138,8 @@ function Session(props) {
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
-  const [createResponseDialogOpen, setCreateResponseDialogOpen] = useState(true)
-  const [createResponseDialogLoading, setCreateResponseDialogLoading] = useState(false)
+  const [createFeedbackDialogOpen, setCreateFeedbackDialogOpen] = useState(false)
+  const [createFeedbackDialogLoading, setCreateFeedbackDialogLoading] = useState(false)
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -164,10 +165,23 @@ function Session(props) {
       {props.session 
         ?
         <div>
-          <CreateResponseDialog 
-            loading={ createResponseDialogLoading }
-            onClose={ () => setCreateResponseDialogOpen(false) }
-            open={ createResponseDialogOpen }
+          <CreateFeedbackDialog 
+            loading={ createFeedbackDialogLoading }
+            onClose={ () => setCreateFeedbackDialogOpen(false) }
+            onConfirm={ responseData => {
+              setCreateFeedbackDialogLoading(true)
+              actions.createFeedback(responseData)
+                .then(() => {
+                  setCreateFeedbackDialogLoading(false)
+                  setCreateFeedbackDialogOpen(false)
+                  flashSuccess('Feedback created')
+                })
+                .catch(err => {
+                  setCreateFeedbackDialogLoading(false)
+                  flashError(err)
+                })
+            } }
+            open={ createFeedbackDialogOpen }
             session={ props.session }
           />
           <Paper className={ classes.section }>
@@ -242,7 +256,7 @@ function Session(props) {
                   title='Add Response'
                 >
                   <IconButton
-                    onClick={ () => setCreateResponseDialogOpen(true) }
+                    onClick={ () => setCreateFeedbackDialogOpen(true) }
                   >
                     <AddBox />
                   </IconButton>

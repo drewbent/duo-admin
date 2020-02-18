@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
 import FeedbackQuestion from 'components/shared/feedback-question'
-import { Typography, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
 import { fetchAllQuestions } from 'services/question-service'
 import { fetchFormQuestionsForForm } from 'services/form-question-service'
@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
 
 const mapStateToProps = (state, ownProps) => ({
   allQuestions: state.Questions,
-  formQuestions: getFormQuestionsForForm(state, ownProps.formId),
+  formQuestions: getFormQuestionsForForm(state, ownProps.formId)
+    .sort((a, b) => a.index_in_form < b.index_in_form),
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

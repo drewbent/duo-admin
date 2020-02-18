@@ -57,7 +57,18 @@ function CreateResponseDialog(props) {
       loading={ props.loading }
       onClose={ props.onClose }
       onConfirm={ () => {
-        console.log(feedbackResponses)
+        if (studentId === -1)
+          return flashError('Must select a student')
+
+        if (distribution.id == null)
+          return flashError('Must select a distribution')
+        
+        props.onConfirm({
+          session_id: props.session.id,
+          student_id: studentId,
+          distribution_id: distribution.id,
+          responses: feedbackResponses,
+        })
       } }
       open={ props.open }
       title='Create Response'
@@ -108,9 +119,7 @@ CreateResponseDialog.propTypes = {
    *  student_id,
    *  session_id,
    *  distribution_id,
-   *  responses: [
-   *    { form_question_id, response }
-   *  ]
+   *  responses: { form_question_id: response }
    * }
    */
   onConfirm: PropTypes.func,
