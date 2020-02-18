@@ -22,9 +22,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   formQuestions: state.FormQuestions,
   questions: state.Questions,
+  student: ownProps.responses.length == 0 
+    ? {} 
+    : state.Students[ownProps.responses[0].class_section_student_id] || {},
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -56,6 +59,12 @@ function FeedbackViewer(props) {
 
   return (
     <div className={ classes.container }>
+      <Typography className={ classes.questionText }>
+        Student
+      </Typography>
+      <Typography className={ classes.responseText }>
+        {props.student.name}
+      </Typography>
       {(props.responses || []).map(response => {
         const question = getQuestion(response)
         return (

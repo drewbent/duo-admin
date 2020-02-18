@@ -24,19 +24,20 @@ export const getResponsesForSession = (state, sessionId) => (
   Object.values(state.Responses)
     .filter(r => r.session_id === sessionId)
     .reduce((acc, next) => {
-      if (acc[next.student_id] == null)
-        acc[next.student_id] = []
+      const studentId = next.class_section_student_id
+      if (acc[studentId] == null)
+        acc[studentId] = []
       
       // Insert into sorted order
       let index = 0
-      for (let i = 0; i < acc[next.student_id].length; i++) {
-        if (acc[next.student_id][i].index_in_order > next.index_in_order)
+      for (let i = 0; i < acc[studentId].length; i++) {
+        if (acc[studentId][i].index_in_order > next.index_in_order)
           break
         else
           index += 1
       }
 
-      acc[next.student_id].splice(index, 0, next)
+      acc[studentId].splice(index, 0, next)
 
       return acc
     }, {})

@@ -141,6 +141,7 @@ function Session(props) {
 
   const numFeedback = Object.keys(props.responses).length
   const feedbackKeys = Object.keys(props.responses).sort()
+  console.log(props.responses)
 
   return (
     <Page>
