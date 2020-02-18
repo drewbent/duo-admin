@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import CreateFeedbackDialog from 'components/shared/dialogs/create-feedback-dialog'
+import FeedbackViewer from 'components/shared/feedback-viewer'
 import LineItem from 'components/shared/line-item'
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
-import { AddBox } from '@material-ui/icons'
+import { AddBox, ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { IconButton, Paper, Toolbar, Tooltip, Typography, makeStyles } from '@material-ui/core'
 
 import { createFeedback, fetchResponsesForSession } from 'services/response-service'
@@ -14,10 +15,11 @@ import { fetchAllStudents } from 'services/class-student-service'
 import { fetchCompletionAfterSession, fetchCompletionBeforeSession } from 'services/completions-service'
 import { fetchSession } from 'services/session-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+import { getResponsesForSession } from 'redux/reducers/responses'
 
 import * as DateUtils from 'utils/date-utils'
 
-const getSessionId = props => props.match.params.sessionId
+const getSessionId = props => parseInt(props.match.params.sessionId, 10)
 
 const useStyles = makeStyles(theme => ({
   infoContainer: {
@@ -42,13 +44,19 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     marginBottom: theme.spacing(1),
   },
-  noResponsesText: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+  noFeedbackText: {
+    paddingBottom: theme.spacing(4),
     textAlign: 'center',
   },
   responseQuestion: {
     marginBottom: theme.spacing(2),
+  },
+  responseSelectBar: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  actionBar: {
+    display: 'flex',
   },
 }))
 
@@ -61,6 +69,7 @@ const mapStateToProps = (state, ownProps) => {
     students: state.Students,
     before: beforeAfter ? state.Completions[beforeAfter.before] : undefined,
     after: beforeAfter ? state.Completions[beforeAfter.after] : undefined,
+    responses:  getResponsesForSession(state, sessionId),
   }
 }
 
@@ -83,26 +92,11 @@ function SingleCompletionTable(props) {
   return (
     <MaterialTable 
       columns={ [
-        {
-          title: 'ID',
-          field: 'id',
-        },
-        {
-          title: '# Correct',
-          field: 'questions_correct',
-        },
-        {
-          title: '# Questions',
-          field: 'questions_out_of',
-        },
-        {
-          title: 'Mastery Category',
-          field: 'mastery_category',
-        },
-        {
-          title: 'Recorded From',
-          field: 'recorded_from',
-        },
+        { title: 'ID', field: 'id' },
+        { title: '# Correct', field: 'questions_correct' },
+        { title: '# Questions', field: 'questions_out_of' },
+        { title: 'Mastery Category', field: 'mastery_category' },
+        { title: 'Recorded From', field: 'recorded_from' },
         {
           title: 'Recorded At',
           render: rowData => DateUtils.formatDateTime(rowData.created_at),
@@ -118,28 +112,13 @@ function SingleCompletionTable(props) {
   )
 }
 
-function FeedbackQuestions({ questions, classes }) {
-  return (
-    <div>
-      {Object.keys(questions).map(question => (
-        <div 
-          className={ classes.feedbackQuestion }
-          key={ question.question }
-        >
-          <Typography className={ classes.questionText }>{question}</Typography>
-          <Typography>{questions[question]}</Typography>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 function Session(props) {
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
   const [createFeedbackDialogOpen, setCreateFeedbackDialogOpen] = useState(false)
   const [createFeedbackDialogLoading, setCreateFeedbackDialogLoading] = useState(false)
+  const [currentFeedbackIndex, setCurrentFeedbackIndex] = useState(0)
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -159,6 +138,9 @@ function Session(props) {
   const getLearner = () => (
     props.students[props.session.learner_id] || {}
   )
+
+  const numFeedback = Object.keys(props.responses).length
+  const feedbackKeys = Object.keys(props.responses).sort()
 
   return (
     <Page>
@@ -251,7 +233,28 @@ function Session(props) {
               <Typography variant='h6'>
                 Session Responses
               </Typography>
-              <div>
+              <div className={ classes.actionBar }>
+                <div className={ classes.responseSelectBar }>
+                  <IconButton
+                    disabled={ currentFeedbackIndex <= 0 }
+                    onClick={ () => {
+                      const nextIndex = Math.max(currentFeedbackIndex - 1, 0)
+                      setCurrentFeedbackIndex(nextIndex) 
+                    } }
+                  >
+                    <ChevronLeft />
+                  </IconButton>
+                  <Typography>{Math.min(currentFeedbackIndex + 1, numFeedback)} of {numFeedback}</Typography>
+                  <IconButton
+                    disabled={ currentFeedbackIndex >= numFeedback - 1 }
+                    onClick={ () => {
+                      const nextIndex = Math.min(currentFeedbackIndex + 1, numFeedback - 1)
+                      setCurrentFeedbackIndex(nextIndex)
+                    } }
+                  >
+                    <ChevronRight />
+                  </IconButton>
+                </div>
                 <Tooltip
                   title='Add Response'
                 >
@@ -263,22 +266,20 @@ function Session(props) {
                 </Tooltip>
               </div>
             </Toolbar>
-            <div className={ classes.content }>
-              {
-                props.responses ?
-                  (Object.keys(props.feedback).length === 0 ?
-                    <Typography>No feedback for this session.</Typography>
-                    :
-                    <FeedbackQuestions 
-                      classes={ classes }
-                      questions={ props.feedback.questions } 
-                    />)
-                  :
-                  <Typography className={ classes.noResponsesText }>
-                    No Responses
+            {
+              props.responses ?
+                (numFeedback === 0 ?
+                  <Typography className={ classes.noFeedbackText }>
+                    No feedback for this session.
                   </Typography>
-              }
-            </div>
+                  :
+                  <FeedbackViewer responses={ props.responses[feedbackKeys[currentFeedbackIndex]] } />
+                )
+                :
+                <Typography className={ classes.noResponsesText }>
+                  No Responses
+                </Typography>
+            }
           </Paper>
         </div>
         :

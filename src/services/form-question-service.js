@@ -8,6 +8,12 @@ export const fetchFormQuestionsForForm = dispatch => async formId => {
   return dispatch(addFormQuestions(data))
 }
 
+export const fetchAllFormQuestions = dispatch => async() => {
+  console.log('Fetching all form questions')
+  const { data } = await api.get('/form-questions')
+  return dispatch(addFormQuestions(data))
+}
+
 export const updateFormQuestion = dispatch => async(id, data) => {
   console.log(`Updating form question with id ${id}`)
   const { data: formQuestion } = await api.patch(`/form-questions/${id}`, data)

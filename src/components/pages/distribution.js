@@ -29,7 +29,7 @@ function Distribution(props) {
   
   return (
     <Page>
-      
+      Hello
     </Page>
   )
 }
