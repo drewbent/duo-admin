@@ -19,7 +19,7 @@ function TextFieldDialog(props) {
       onConfirm={ () => props.onConfirm(value) }
       open={ props.open }
       title={ props.title }
-    >s
+    >
       <TextField 
         { ...props.textFieldProps }
         fullWidth
