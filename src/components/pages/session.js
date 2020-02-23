@@ -223,7 +223,11 @@ function Session(props) {
                   <TooltipButton
                     color={ theme.palette.success.dark } 
                     icon='check_circle'
-                    onClick={ () => console.log('Yo') }
+                    onClick={ () => {
+                      actions.finishSession(props.session.id)
+                        .then(() => flashSuccess('Session finished'))
+                        .catch(flashError)
+                    } }
                     tooltip='Finish Session'
                   />
                   <TooltipButton
