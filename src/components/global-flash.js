@@ -9,7 +9,6 @@ import {
 } from '@material-ui/icons'
 import { IconButton, Snackbar, SnackbarContent, makeStyles } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { green } from '@material-ui/core/colors'
 
 import * as actions from 'redux/actions/global-flash'
 import store from 'redux/store'
@@ -25,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
   },
   success: {
-    backgroundColor: green[600],
+    backgroundColor: theme.palette.success.main,
   },
   error: {
     backgroundColor: theme.palette.error.dark,

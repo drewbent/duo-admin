@@ -1,19 +1,21 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
+import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
 import CreateFeedbackDialog from 'components/shared/dialogs/create-feedback-dialog'
 import FeedbackViewer from 'components/shared/feedback-viewer'
 import LineItem from 'components/shared/line-item'
 import Loader from 'components/shared/loader'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
+import TooltipButton from 'components/shared/tooltip-button'
 import { AddBox, ChevronLeft, ChevronRight } from '@material-ui/icons'
-import { IconButton, Paper, Toolbar, Tooltip, Typography, makeStyles } from '@material-ui/core'
+import { FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Toolbar, Tooltip, Typography, makeStyles, useTheme } from '@material-ui/core'
 
+import { cancelSession, fetchCancellationReasons, fetchSession, finishSession } from 'services/session-service'
 import { createFeedback, fetchResponsesForSession } from 'services/response-service'
 import { fetchAllStudents } from 'services/class-student-service'
 import { fetchCompletionAfterSession, fetchCompletionBeforeSession } from 'services/completions-service'
-import { fetchSession } from 'services/session-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 import { getResponsesForSession } from 'redux/reducers/responses'
 
@@ -70,6 +72,7 @@ const mapStateToProps = (state, ownProps) => {
     before: beforeAfter ? state.Completions[beforeAfter.before] : undefined,
     after: beforeAfter ? state.Completions[beforeAfter.after] : undefined,
     responses:  getResponsesForSession(state, sessionId),
+    cancellationReasons: state.CancellationReasons,
   }
 }
 
@@ -84,6 +87,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       fetchCompletionBefore: () => fetchCompletionBeforeSession(dispatch)(sessionId),
       fetchCompletionAfter: () => fetchCompletionAfterSession(dispatch)(sessionId),
       fetchStudents: fetchAllStudents(dispatch),
+      fetchCancellationReasons: fetchCancellationReasons(dispatch),
+      cancelSession: cancelSession(dispatch),
+      finishSession: finishSession(dispatch),
     },
   }
 }
@@ -113,11 +119,15 @@ function SingleCompletionTable(props) {
 }
 
 function Session(props) {
+  const theme = useTheme()
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
   const [createFeedbackDialogOpen, setCreateFeedbackDialogOpen] = useState(false)
   const [createFeedbackDialogLoading, setCreateFeedbackDialogLoading] = useState(false)
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
+  const [cancelDialogLoading, setCancelDialogLoading] = useState(false)
+  const [cancellationReason, setCancellationReason] = useState(-1)
   const [currentFeedbackIndex, setCurrentFeedbackIndex] = useState(0)
 
   if (!hasFetchedData) {
@@ -128,6 +138,7 @@ function Session(props) {
       actions.fetchCompletionBefore(),
       actions.fetchCompletionAfter(),
       actions.fetchStudents(),
+      actions.fetchCancellationReasons(),
     ]).catch(flashError)
   }
 
@@ -141,13 +152,48 @@ function Session(props) {
 
   const numFeedback = Object.keys(props.responses).length
   const feedbackKeys = Object.keys(props.responses).sort()
-  console.log(props.responses)
 
   return (
     <Page>
       {props.session 
         ?
         <div>
+          <ConfirmDialog
+            loading={ cancelDialogLoading }
+            onClose={ () => setCancelDialogOpen(false) }
+            onConfirm={ () => {
+              if (cancellationReason === -1)
+                return flashError('Must select a reason')
+              
+              const data = { cancellation_reason: cancellationReason }
+              setCancelDialogLoading(true)
+              actions.cancelSession(props.session.id, data)
+                .then(() => {
+                  setCancelDialogLoading(false)
+                  setCancelDialogOpen(false)
+                  flashSuccess('Session cancelled')
+                })
+                .catch(err => {
+                  setCancelDialogLoading(false)
+                  flashError(err)
+                })
+            } }
+            open={ cancelDialogOpen }
+            title='Cancel Session'
+          >
+            <FormControl fullWidth>
+              <InputLabel id='reason-selector-label'>Reason</InputLabel>
+              <Select
+                onChange={ e => setCancellationReason(e.target.value) }
+                value={ cancellationReason }
+              >
+                <MenuItem value={ -1 }><em>None</em></MenuItem>
+                {(props.cancellationReasons || []).map(reason => (
+                  <MenuItem value={ reason.value }>{ reason.title }</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </ConfirmDialog>
           <CreateFeedbackDialog 
             loading={ createFeedbackDialogLoading }
             onClose={ () => setCreateFeedbackDialogOpen(false) }
@@ -168,10 +214,26 @@ function Session(props) {
             session={ props.session }
           />
           <Paper className={ classes.section }>
-            <Toolbar>
+            <Toolbar className={ classes.toolbar }>
               <Typography variant='h5'>
                 Session Info
               </Typography>
+              {props.session.end_time == null && (
+                <div>
+                  <TooltipButton
+                    color={ theme.palette.success.dark } 
+                    icon='check_circle'
+                    onClick={ () => console.log('Yo') }
+                    tooltip='Finish Session'
+                  />
+                  <TooltipButton
+                    color={ theme.palette.error.dark } 
+                    icon='cancel'
+                    onClick={ () => setCancelDialogOpen(true) }
+                    tooltip='Cancel Session'
+                  />
+                </div>
+              )}
             </Toolbar>
             <div className={ classes.infoContainer }>
               <LineItem 
@@ -195,7 +257,7 @@ function Session(props) {
                 title='Date' 
               />
               <LineItem 
-                detail={ DateUtils.formatTime(props.session.end_time) } 
+                detail={ DateUtils.formatTime(props.session.start_time) } 
                 title='Start Time' 
               />
               <LineItem

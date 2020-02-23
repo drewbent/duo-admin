@@ -68,7 +68,7 @@ function FeedbackViewer(props) {
       {(props.responses || []).map(response => {
         const question = getQuestion(response)
         return (
-          <div>
+          <div key={ response.id }>
             <Typography className={ classes.questionText }>
               {question.question}
             </Typography>

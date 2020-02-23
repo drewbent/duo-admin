@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import CancellationReasons from './reducers/cancellation-reasons'
 import ClassSessions from './reducers/class-sessions'
 import ClassStudents from './reducers/class-students'
 import Classes from './reducers/classes'
@@ -19,6 +20,7 @@ import UserCompletions from './reducers/user-completions'
 import Users from './reducers/users'
 
 const reducers = combineReducers({
+  CancellationReasons,
   ClassSessions,
   ClassStudents,
   Classes,

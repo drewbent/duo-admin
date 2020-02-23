@@ -3,6 +3,8 @@ import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import { green } from '@material-ui/core/colors'
+
 import AppBar from 'components/app-bar'
 import AuthRoute from 'components/authenticated-route'
 import Breadcrumbs from 'components/breadcrumbs'
@@ -25,6 +27,7 @@ import { fetchLoginStatus } from './services/auth-service'
 const theme = createMuiTheme({
   palette: {
     primary: { main: '#FF7890' },
+    success: { main: green[600] },
   },
 })
 
