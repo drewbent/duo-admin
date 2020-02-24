@@ -8,6 +8,12 @@ export const fetchDistributions = dispatch => async() => {
   return dispatch(addDistributions(data))
 }
 
+export const fetchDistribution = dispatch => async(id) => {
+  console.log(`Fetching distribution ${id}`)
+  const { data } = await api.get(`/form-distributions/${id}`)
+  return dispatch(addDistributions([data]))
+}
+
 export const createDistribution = dispatch => async data => {
   console.log('Creating distribution')
   const { data: distribution } = await api.post('/form-distributions', data)

@@ -89,7 +89,18 @@ function Forms(props) {
   const [createDistDialogLoading, setCreateDistDialogLoading] = useState(false)
   const [createQuestionDialogOpen, setCreateQuestionDialogOpen] = useState(false)
   const [createQuestionDialogLoading, setCreateQuestionDialogLoading] = useState(false)
-  const [tab, setTab] = useState(0)
+
+  // Initial tab; based on URL
+  const pathnames = window.location.pathname.split('/').filter(x => x)
+  const lastRoute = '/' + pathnames[pathnames.length - 1]
+  let initialTab = 0
+  switch (lastRoute) {
+    case '/distributions':
+      initialTab = 3
+      break
+  }
+
+  const [tab, setTab] = useState(initialTab)
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -288,6 +299,7 @@ function Forms(props) {
                 .catch(flashError)
             },
           } }
+          onRowClick={ (_, rowData) => props.history.push(`/forms/distributions/${rowData.id}`) }
           options={ {
             actionsColumnIndex: 5,
           } }

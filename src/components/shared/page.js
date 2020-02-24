@@ -1,5 +1,7 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 
+import Loader from 'components/shared/loader'
 import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
@@ -16,9 +18,13 @@ function Page(props) {
 
   return (
     <div className={ classes.container }>
-      {props.children}
+      {props.loading ? <Loader visible /> : props.children }
     </div>
   )
+}
+
+Page.propTypes = {
+  loading: PropTypes.bool,
 }
 
 export default Page

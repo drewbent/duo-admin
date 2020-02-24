@@ -1,6 +1,8 @@
 import dateformat from 'dateformat'
 
-export const formatDate = date => dateformat(date, 'mm/dd/yyyy')
+export const formatDate = date => dateformat(date, 'm/dd/yyyy')
+
+export const formatFullDate = date => dateformat(date, 'm/dd/yyyy (ddd) @ H:MM TT')
 
 export const formatDateBackend = date => dateformat(date, 'yyyy-mm-dd')
 

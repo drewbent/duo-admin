@@ -2,11 +2,12 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
-import { Typography, makeStyles } from '@material-ui/core'
+import { Divider, Typography, makeStyles } from '@material-ui/core'
 
 import { fetchAllFormQuestions } from 'services/form-question-service'
 import { fetchAllQuestions } from 'services/question-service'
 import { flashError } from 'components/global-flash'
+import { formatFullDate } from 'utils/date-utils'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -20,14 +21,15 @@ const useStyles = makeStyles(theme => ({
   responseText: {
     marginBottom: theme.spacing(2),
   },
+  divider: {
+    marginBottom: theme.spacing(2),
+  },
 }))
 
 const mapStateToProps = (state, ownProps) => ({
   formQuestions: state.FormQuestions,
   questions: state.Questions,
-  student: ownProps.responses.length == 0 
-    ? {} 
-    : state.Students[ownProps.responses[0].class_section_student_id] || {},
+  student: state.Students[ownProps.feedback.studentId] || {},
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -65,7 +67,17 @@ function FeedbackViewer(props) {
       <Typography className={ classes.responseText }>
         {props.student.name}
       </Typography>
-      {(props.responses || []).map(response => {
+      <Typography className={ classes.questionText }>
+        Created At
+      </Typography>
+      <Typography className={ classes.responseText }>
+        {props.feedback.createdAt}
+      </Typography>
+      <Divider 
+        className={ classes.divider }
+        orientation='horizontal' 
+      />
+      {(props.feedback.responses || []).map(response => {
         const question = getQuestion(response)
         return (
           <div key={ response.id }>
@@ -83,7 +95,10 @@ function FeedbackViewer(props) {
 }
 
 FeedbackViewer.propTypes = {
-  responses: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * A feedback object with keys { studentId, createdAt, responses }
+   */
+  feedback: PropTypes.object,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedbackViewer)

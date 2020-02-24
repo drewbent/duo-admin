@@ -14,6 +14,7 @@ import SplashScreen from 'components/pages/splash-screen'
 // Pages
 import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
+import Distribution from 'components/pages/distribution'
 import Form from 'components/pages/form'
 import Forms from 'components/pages/forms'
 import Login from 'components/pages/login'
@@ -73,6 +74,12 @@ function App(props) {
               <AuthRoute component={ Session }
                 exact
                 path='/session-feed/sessions/:sessionId' />
+              <AuthRoute component={ Distribution }
+                exact
+                path='/forms/distributions/:distributionId' />
+              <AuthRoute component={ Forms }
+                exact
+                path='/forms/distributions' />
               <AuthRoute component={ Form }
                 exact
                 path='/forms/:formId' />
