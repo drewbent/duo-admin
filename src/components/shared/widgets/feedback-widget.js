@@ -33,7 +33,7 @@ function FeedbackWidget(props) {
     <div>
       <Toolbar className={ classes.toolbar }>
         <Typography variant='h6'>
-          Session Feedback
+          {props.title}
         </Typography>
         <div className={ classes.actionBar }>
           <div className={ classes.responseSelectBar }>
@@ -89,6 +89,7 @@ FeedbackWidget.propTypes = {
    * props for TooltipButton)
    */
   actions: PropTypes.arrayOf(PropTypes.object),
+  title: PropTypes.string,
 }
 
 export default FeedbackWidget

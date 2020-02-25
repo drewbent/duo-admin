@@ -71,7 +71,7 @@ function FeedbackViewer(props) {
         Created At
       </Typography>
       <Typography className={ classes.responseText }>
-        {props.feedback.createdAt}
+        {formatFullDate(props.feedback.createdAt)}
       </Typography>
       <Divider 
         className={ classes.divider }

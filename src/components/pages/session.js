@@ -288,6 +288,7 @@ function Session(props) {
             },
           ] }
           feedback={ props.feedback }
+          title='Session Feedback'
         />
       </Paper>
     </Page>

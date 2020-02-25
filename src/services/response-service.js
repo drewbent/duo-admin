@@ -8,6 +8,12 @@ export const fetchResponsesForSession = dispatch => async sessionId => {
   return dispatch(addResponses(data))
 }
 
+export const fetchResponsesForDistribution = dispatch => async distributionId => {
+  console.log(`Fetching responses for distribution ${distributionId}`)
+  const { data } = await api.get(`/form-distributions/${distributionId}/form-responses`)
+  return dispatch(addResponses(data))
+}
+
 /**
  * Data should have the format: 
  * {

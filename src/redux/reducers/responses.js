@@ -16,19 +16,32 @@ export default (state = initialState, action) => {
   }
 }
 
+// SELECTORS
+// =========
+
+export const getFeedbackForSession = (state, sessionId) => {
+  return getFeedback(state, 'session_id', sessionId)
+}
+
+export const getFeedbackForDistribution = (state, distributionId) => {
+  return getFeedback(state, 'form_distribution_id', distributionId)
+}
+
 /**
- * Gets the responses for a session, grouped by student, sorted in their original sort 
- * order. The return payload is a list of responses with the format:
+ * Returns a feedback object, with all responses for the given "filterId," 
+ * grouping by 'groupBy'. For example, to get "feedback for student 12", you 
+ * would call `getFeedback(state, 'class_section_student_id', 12)`
  * 
- * {
- *  studentId,
- *  createdAt,
- *  responses: response[]
- * }
+ * @param {Object} state 
+ * @param {String} field The response field to group reponses by (e.g.
+ * form_distribution_id, class_section_student_id)
+ * @param {Any} filterId The id to filter responses on
+ * @param {Boolean} sortByTime Whether or not to sort the feedback by created_at 
+ * time, ascending.
  */
-export const getFeedbackForSession = (state, sessionId, sortByTime = true) => {
+const getFeedback = (state, groupBy, filterId, sortByTime = true) => {
   const groupedResponses = Object.values(state.Responses)
-    .filter(r => r.session_id === sessionId)
+    .filter(r => r[groupBy] === filterId)
     .reduce((acc, next) => {
       // Group responses by STUDENT and CREATION TIME
       const key = `${next.class_section_student_id}#${next.created_at}`
@@ -64,4 +77,3 @@ export const getFeedbackForSession = (state, sessionId, sortByTime = true) => {
 
   return feedback
 }
-
