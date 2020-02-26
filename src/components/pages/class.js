@@ -16,7 +16,9 @@ import {
 } from 'services/class-student-service'
 import { fetchClass } from 'services/classes-service'
 import { fetchSessionsForClass } from 'services/session-service'
+import { fetchSkillsForClass } from 'services/skill-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+import { getSlugFromSkill } from '../../utils/skill-utils'
 
 import { formatDateTime } from 'utils/date-utils'
 
@@ -43,6 +45,7 @@ const mapStateToProps = (state, ownProps) => {
     sessions: (state.ClassSessions[classId] || [])
       .map(sessionId => state.Sessions[sessionId])
       .filter(x => x),
+    skills: state.ClassSkills[classId] || [],
   }
 }
 
@@ -55,6 +58,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       deleteStudent: id => deleteStudent(dispatch)(classId, id),
       fetchClass: () => fetchClass(dispatch)(classId),
       fetchSessions: () => fetchSessionsForClass(dispatch)(classId),
+      fetchSkills: () => fetchSkillsForClass(dispatch)(classId),
       fetchClassStudents: () => fetchClassStudents(dispatch)(classId),
       updateStudent: (id, data) => updateStudent(dispatch)(classId, id, data),
     },
@@ -75,6 +79,7 @@ function Class(props) {
       actions.fetchClass(),
       actions.fetchClassStudents(),
       actions.fetchSessions(),
+      actions.fetchSkills(),
     ])
       .catch(err => flashError(err.message))
   }
@@ -153,37 +158,54 @@ function Class(props) {
           title={ `Students in ${props.classSection.name}` }
         />
       </div>
-      <MaterialTable
-        columns={ [
-          { title: 'ID', field: 'id' },
-          { title: 'Skill', field: 'skill' },
-          {
-            title: 'Guide',
-            render: rowData => (props.allStudents[rowData.guide_id] || {}).name,
-          },
-          {
-            title: 'Learner',
-            render: rowData => (props.allStudents[rowData.learner_id] || {}).name,
-          },
-          {
-            title: 'Start',
-            render: rowData => formatDateTime(rowData.start_time),
-            customSort: (a, b) => Date.parse(a.start_time) - Date.parse(b.start_time),
-            defaultSort: 'desc',
-          },
-          {
-            title: 'End',
-            render: rowData => rowData.end_time ? formatDateTime(rowData.end_time) : '',
-          },
-          {
-            title: 'Cancelled',
-            render: rowData => rowData.end_time ? (rowData.cancellation_reason ? 'True' : 'False') : '',
-          },
-        ] }
-        data={ props.sessions }
-        onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/sessions/${rowData.id}`) }
-        title='Sessions'
-      />
+      <div className={ classes.section }>
+        <MaterialTable
+          columns={ [
+            { title: 'ID', field: 'id' },
+            { title: 'Skill', field: 'skill' },
+            {
+              title: 'Guide',
+              render: rowData => (props.allStudents[rowData.guide_id] || {}).name,
+            },
+            {
+              title: 'Learner',
+              render: rowData => (props.allStudents[rowData.learner_id] || {}).name,
+            },
+            {
+              title: 'Start',
+              render: rowData => formatDateTime(rowData.start_time),
+              customSort: (a, b) => Date.parse(a.start_time) - Date.parse(b.start_time),
+              defaultSort: 'desc',
+            },
+            {
+              title: 'End',
+              render: rowData => rowData.end_time ? formatDateTime(rowData.end_time) : '',
+            },
+            {
+              title: 'Cancelled',
+              render: rowData => rowData.end_time ? (rowData.cancellation_reason ? 'True' : 'False') : '',
+            },
+          ] }
+          data={ props.sessions }
+          onRowClick={ (_, rowData) => props.history.push(`/classes/${classId}/sessions/${rowData.id}`) }
+          title='Sessions'
+        />
+      </div>
+      <div className={ classes.section }>
+        <MaterialTable
+          columns={ [
+            { title: 'Skill', field: 'name' },
+          ] }
+          data={ props.skills.map(skill => ({ name: skill })) }
+          onRowClick={ (_, row) => 
+            props.history.push(`/classes/${classId}/skills/${getSlugFromSkill(row.name)}`) 
+          }
+          options={ {
+            paging: false,
+          } }
+          title='Skills'
+        />
+      </div>
     </Page>
   )
 }

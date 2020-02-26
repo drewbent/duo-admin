@@ -99,6 +99,10 @@ function SessionFeed(props) {
                     return <CircularProgress size={ 24 } />
                 },
               },
+              {
+                title: 'Taught',
+                render: rowData => '⭐️',
+              },
             ] }
             data={ [session] }
             onRowClick={ (_, rowData) => props.history.push(`/session-feed/sessions/${rowData.id}`) }
