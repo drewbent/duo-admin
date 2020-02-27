@@ -239,6 +239,10 @@ function Session(props) {
             detail={ getLearner().name } 
             title='Learner' 
           />
+          <LineItem 
+            detail={ session.manually_requested ? 'Yes' : 'No' } 
+            title='Manually Requested' 
+          />
           <LineItem
             detail={ DateUtils.formatDate(session.start_time) } 
             title='Date' 
@@ -261,14 +265,14 @@ function Session(props) {
           />
         </div>
       </Paper>
-      <div className={ classes.section }>
+      {!session.manually_requested && <div className={ classes.section }>
         <SingleCompletionTable 
           completion={ props.before }
           tableProps={ {
             title: 'Before',
           } }
         />
-      </div>
+      </div>}
       <div className={ classes.section }>
         <SingleCompletionTable 
           completion={ props.after }

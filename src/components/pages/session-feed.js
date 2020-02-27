@@ -88,6 +88,10 @@ function SessionFeed(props) {
                 title: 'Learner',
                 render: rowData => (props.students[rowData.learner_id] || {}).name,
               },
+              { 
+                title: 'Manually Requested', 
+                render: rowData => rowData.manually_requested ? 'Yes' : 'No',
+              },
               {
                 title: 'Status',
                 render: rowData => {
@@ -98,10 +102,6 @@ function SessionFeed(props) {
                   else
                     return <CircularProgress size={ 24 } />
                 },
-              },
-              {
-                title: 'Taught',
-                render: rowData => '⭐️',
               },
             ] }
             data={ [session] }
