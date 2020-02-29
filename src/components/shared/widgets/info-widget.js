@@ -29,14 +29,21 @@ function InfoWidget(props) {
         </Typography>
         <div>
           {(props.actions || []).map(action => (
-            <TooltipButton { ...action } />
+            <TooltipButton 
+              key={ action.icon }
+              { ...action } 
+            />
           ))}
         </div>
       </Toolbar>
       <div className={ classes.infoContainer }>
         {(props.lineItems || []).map(lineItem => (
-          <LineItem { ...lineItem } />
+          <LineItem 
+            key={ lineItem.title }
+            { ...lineItem } 
+          />
         ))}
+        {props.children}
       </div>
     </div>
   )

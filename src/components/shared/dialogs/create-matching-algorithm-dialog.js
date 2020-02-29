@@ -32,7 +32,7 @@ function CreateMatchingAlgorithmDialog(props) {
       name,
       description,
       sql_query: query,
-      arguments: argumentList,
+      args: argumentList,
     }
   }
 

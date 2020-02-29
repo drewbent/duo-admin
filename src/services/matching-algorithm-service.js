@@ -8,8 +8,36 @@ export const fetchAllMatchingAlgorithms = dispatch => async() => {
   return dispatch(addMatchingAlgorithms(data))
 }
 
+export const fetchMatchingAlgorithm = dispatch => async id => {
+  console.log(`Fetching matching algorithm ${id}`)
+  const { data } = await api.get(`/matching-algorithms/${id}`)
+  return dispatch(addMatchingAlgorithms([data]))
+}
+
 export const createMatchingAlgorithm = dispatch => async data => {
   console.log('Creating matching algorithm')
   const { data: algorithm } = await api.post('/matching-algorithms', data)
   return dispatch(addMatchingAlgorithms([algorithm]))
+}
+
+/**
+ * @param {Object} student The student to test for
+ * @param {Object} algorithm The argument to test
+ * @param {*} args A mapping of arg => value
+ */
+export const getTestMatchingAlgorithmPath = (student, algorithm, args) => {
+  const paramString = Object.keys(args).reduce((acc, next) => {
+    acc.push(`${next}=${args[next]}`)
+    return acc
+  }, []).join('&')
+  return `/students/${student.id}/find-matches?algorithm=${algorithm.id}${paramString ? `&${paramString}` : ''}`
+}
+
+/**
+ * @param {String} path
+ */
+export const testMatchingAlgorithm = async path => {
+  console.log('Testing matching algorithm')
+  const { data } = await api.get(path)
+  return data
 }

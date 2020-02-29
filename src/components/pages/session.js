@@ -229,7 +229,7 @@ function Session(props) {
                 : DateUtils.formatDateTime(session.end_time),
               title: 'End Time',
             },
-            { detail: session.cancellation_reason || 'N/A', title: 'Cancellation Reason' }
+            { detail: session.cancellation_reason || 'N/A', title: 'Cancellation Reason' },
           ] }
           title='Session Info'
         />

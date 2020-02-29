@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import CreateMatchingAlgorithmDialog from 'components/shared/dialogs/create-matching-algorithm-dialog'
 import MaterialTable from 'material-table'
@@ -83,6 +84,7 @@ function Algorithms(props) {
             { title: 'Name', field: 'name' },
           ] }
           data={ Object.values(props.algorithms) }
+          onRowClick={ (_, rowData) => props.history.push(`/algorithms/${rowData.id}`) }
           title='All Algorithms'
         />
       </div>
@@ -90,4 +92,4 @@ function Algorithms(props) {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Algorithms)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Algorithms))

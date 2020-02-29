@@ -3,9 +3,8 @@ import { connect } from 'react-redux'
 
 import FeedbackWidget from 'components/shared/widgets/feedback-widget'
 import InfoWidget from 'components/shared/widgets/info-widget'
-import LineItem from 'components/shared/line-item'
 import Page from 'components/shared/page'
-import { Paper, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import { Paper, makeStyles } from '@material-ui/core'
 
 import { fetchAllForms } from 'services/form-service'
 import { fetchAllStudents } from 'services/class-student-service'
