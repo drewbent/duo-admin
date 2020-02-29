@@ -1,5 +1,6 @@
 import * as api from 'utils/api'
 
+import { addActiveMatchingAlgorithms } from 'redux/actions/active-matching-algorithms'
 import { addMatchingAlgorithms } from 'redux/actions/matching-algorithms'
 
 export const fetchAllMatchingAlgorithms = dispatch => async() => {
@@ -40,4 +41,16 @@ export const testMatchingAlgorithm = async path => {
   console.log('Testing matching algorithm')
   const { data } = await api.get(path)
   return data
+}
+
+export const activateMatchingAlgorithm = dispatch => async(data) => {
+  console.log('Activating matching algorithm')
+  const { data: actives } = await api.post('/active-matching-algorithms', data)
+  return dispatch(addActiveMatchingAlgorithms(actives))
+}
+
+export const fetchActiveMatchingAlgorithms = dispatch => async() => {
+  console.log('Fetching active matching algorithms')
+  const { data } = await api.get('/active-matching-algorithms')
+  return dispatch(addActiveMatchingAlgorithms(data))
 }
