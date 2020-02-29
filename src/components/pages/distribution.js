@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import FeedbackWidget from 'components/shared/widgets/feedback-widget'
+import InfoWidget from 'components/shared/widgets/info-widget'
 import LineItem from 'components/shared/line-item'
 import Page from 'components/shared/page'
 import { Paper, Toolbar, Typography, makeStyles } from '@material-ui/core'
@@ -11,7 +12,7 @@ import { fetchAllStudents } from 'services/class-student-service'
 import { fetchClasses } from 'services/classes-service'
 import { fetchDistribution } from 'services/distribution-service'
 import { fetchResponsesForDistribution } from 'services/response-service'
-import { flashError, flashSuccess } from 'components/global-flash'
+import { flashError } from 'components/global-flash'
 import { formatDate } from 'utils/date-utils'
 import { getFeedbackForDistribution } from 'redux/reducers/responses'
 
@@ -20,12 +21,6 @@ const getDistributionId = props => parseInt(props.match.params.distributionId, 1
 const useStyles = makeStyles(theme => ({
   section: {
     marginBottom: theme.spacing(2),
-  },
-  infoContainer: {
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    paddingBottom: theme.spacing(2),
-    maxWidth: 500,
   },
 }))
 
@@ -75,25 +70,14 @@ function Distribution(props) {
   return (
     <Page loading={ props.distribution == null }>
       <Paper className={ classes.section }>
-        <Toolbar>
-          <Typography variant='h5'>
-            Distribution Info
-          </Typography>
-        </Toolbar>
-        <div className={ classes.infoContainer }>
-          <LineItem 
-            detail={ formatDate(distribution.applicable_date) }
-            title='Date'
-          />
-          <LineItem 
-            detail={ (props.classes[distribution.class_section_id] || {}).name }
-            title='Class'
-          />
-          <LineItem 
-            detail={ (props.forms[distribution.form_id] || {}).name }
-            title='Form'
-          />
-        </div>
+        <InfoWidget 
+          lineItems={ [
+            { detail: formatDate(distribution.applicable_date), title: 'Date' },
+            { detail: (props.classes[distribution.class_section_id] || {}).name, title: 'Class' },
+            { detail: (props.forms[distribution.form_id] || {}).name, title: 'Form' },
+          ] }
+          title='Distribution Info'
+        />
       </Paper>
       <Paper className={ classes.section }>
         <FeedbackWidget 

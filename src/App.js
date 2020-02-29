@@ -12,6 +12,7 @@ import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
 
 // Pages
+import Algorithms from 'components/pages/algorithms'
 import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
 import Distribution from 'components/pages/distribution'
@@ -62,6 +63,9 @@ function App(props) {
                 exact
                 path='/'
                 render={ () => <Redirect to='/classes' /> } />
+              <AuthRoute component={ Algorithms } 
+                exact
+                path='/algorithms' />
               <AuthRoute component={ Classes }
                 exact
                 path='/classes' />

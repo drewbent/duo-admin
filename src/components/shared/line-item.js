@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme => ({
 
 function LineItem(props) {
   const classes = useStyles()
-
   return (
     <div className={ classes.container }>
       <Typography>

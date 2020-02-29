@@ -43,6 +43,11 @@ const links = [
     icon: 'dynamic_feed',
     route: '/session-feed',
   },
+  {
+    title: 'Algorithms',
+    icon: 'functions',
+    route: '/algorithms',
+  },
 ]
 
 const drawerWidth = 240

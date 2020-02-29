@@ -11,6 +11,7 @@ import Distributions from './reducers/distributions'
 import FormQuestions from './reducers/form-questions'
 import Forms from './reducers/forms'
 import GlobalFlash from './reducers/global-flash'
+import MatchingAlgorithms from './reducers/matching-algorithms'
 import QuestionTypes from './reducers/question-types'
 import Questions from './reducers/questions'
 import Responses from './reducers/responses'
@@ -32,6 +33,7 @@ const reducers = combineReducers({
   FormQuestions,
   Forms,
   GlobalFlash,
+  MatchingAlgorithms,
   QuestionTypes,
   Questions,
   Responses,

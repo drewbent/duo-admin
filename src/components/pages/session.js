@@ -5,11 +5,10 @@ import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
 import CreateFeedbackDialog from 'components/shared/dialogs/create-feedback-dialog'
 
 import FeedbackWidget from 'components/shared/widgets/feedback-widget'
-import LineItem from 'components/shared/line-item'
+import InfoWidget from 'components/shared/widgets/info-widget'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
-import TooltipButton from 'components/shared/tooltip-button'
-import { FormControl, InputLabel, MenuItem, Paper, Select, Toolbar, Typography, makeStyles, useTheme } from '@material-ui/core'
+import { FormControl, InputLabel, MenuItem, Paper, Select, makeStyles, useTheme } from '@material-ui/core'
 
 import { cancelSession, fetchCancellationReasons, fetchSession, finishSession } from 'services/session-service'
 import { createFeedback, fetchResponsesForSession } from 'services/response-service'
@@ -197,73 +196,43 @@ function Session(props) {
         session={ session }
       />
       <Paper className={ classes.section }>
-        <Toolbar className={ classes.toolbar }>
-          <Typography variant='h5'>
-            Session Info
-          </Typography>
-          {session.end_time == null && (
-            <div>
-              <TooltipButton
-                color={ theme.palette.success.dark } 
-                icon='check_circle'
-                onClick={ () => {
-                  actions.finishSession(session.id)
-                    .then(() => flashSuccess('Session finished'))
-                    .catch(flashError)
-                } }
-                tooltip='Finish Session'
-              />
-              <TooltipButton
-                color={ theme.palette.error.dark } 
-                icon='cancel'
-                onClick={ () => setCancelDialogOpen(true) }
-                tooltip='Cancel Session'
-              />
-            </div>
-          )}
-        </Toolbar>
-        <div className={ classes.infoContainer }>
-          <LineItem 
-            detail={ session.id }
-            title='ID' 
-          />
-          <LineItem 
-            detail={ session.skill }
-            title='Skill'
-          />
-          <LineItem 
-            detail={ getGuide().name }
-            title='Guide' 
-          />
-          <LineItem 
-            detail={ getLearner().name } 
-            title='Learner' 
-          />
-          <LineItem 
-            detail={ session.manually_requested ? 'Yes' : 'No' } 
-            title='Manually Requested' 
-          />
-          <LineItem
-            detail={ DateUtils.formatDate(session.start_time) } 
-            title='Date' 
-          />
-          <LineItem 
-            detail={ DateUtils.formatTime(session.start_time) } 
-            title='Start Time' 
-          />
-          <LineItem
-            detail={
-              DateUtils.areSameDate(session.start_time, session.end_time)
+        <InfoWidget 
+          actions={ session.end_time == null ? [
+            {
+              color: theme.palette.success.dark,
+              icon: 'check_circle',
+              onClick: () => {
+                actions.finishSession(session.id)
+                  .then(() => flashSuccess('Session finished'))
+                  .catch(flashError)
+              },
+              tooltip: 'Finish Session',
+            },
+            {
+              color: theme.palette.error.dark,
+              icon: 'cancel',
+              onClick: () => setCancelDialogOpen(true),
+              tooltip: 'Cancel Session',
+            },
+          ] : [] }
+          lineItems={ [
+            { detail: session.id, title: 'ID' },
+            { detail: session.skill, title: 'Skill' },
+            { detail: getGuide().name, title: 'Guide' },
+            { detail: getLearner().name, title: 'Learner' },
+            { detail: session.manually_requested ? 'Yes' : 'No', title: 'Manually Requested' },
+            { detail: DateUtils.formatDate(session.start_time), title: 'Date' },
+            { detail: DateUtils.formatTime(session.start_time), title: 'Start Time' },
+            { 
+              detail:  DateUtils.areSameDate(session.start_time, session.end_time)
                 ? DateUtils.formatTime(session.end_time)
-                : DateUtils.formatDateTime(session.end_time)
-            } 
-            title='End Time' 
-          />
-          <LineItem 
-            detail={ session.cancellation_reason || 'N/A' }
-            title='Cancellation Reason'
-          />
-        </div>
+                : DateUtils.formatDateTime(session.end_time),
+              title: 'End Time',
+            },
+            { detail: session.cancellation_reason || 'N/A', title: 'Cancellation Reason' }
+          ] }
+          title='Session Info'
+        />
       </Paper>
       {!session.manually_requested && <div className={ classes.section }>
         <SingleCompletionTable 
