@@ -21,6 +21,12 @@ export const createMatchingAlgorithm = dispatch => async data => {
   return dispatch(addMatchingAlgorithms([algorithm]))
 }
 
+export const updateMatchingAlgorithm = dispatch => async(id, data) => {
+  console.log(`Updating matching algorithm ${id}`)
+  const { data: algorithm } = await api.patch(`/matching-algorithms/${id}`, data)
+  return dispatch(addMatchingAlgorithms([algorithm]))
+}
+
 /**
  * @param {Object} student The student to test for
  * @param {Object} algorithm The argument to test

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
 import FeedbackViewer from 'components/shared/feedback-viewer'
-import TooltipButton from 'components/shared/tooltip-button'
+import TooltipButton from 'components/shared/controls/tooltip-button'
 import { ChevronLeft, ChevronRight } from '@material-ui/icons'
 import { IconButton, Toolbar, Typography, makeStyles } from '@material-ui/core'
 

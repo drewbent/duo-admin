@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
+import ArgCreator from 'components/shared/controls/arg-creator'
 import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
-import { TextField, makeStyles } from '@material-ui/core'
+import { Button, TextField, makeStyles } from '@material-ui/core'
 
 import { flashError } from 'components/global-flash'
 
@@ -17,7 +18,7 @@ function CreateMatchingAlgorithmDialog(props) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [query, setQuery] = useState('')
-  const [args, setArgs] = useState('')
+  const [args, setArgs] = useState([])
 
   const getAlgorithm = () => {
     if (!name) 
@@ -26,13 +27,20 @@ function CreateMatchingAlgorithmDialog(props) {
     if (!query) 
       throw new Error('Must provide a query')
 
-    const argumentList = args.split(',')
-    console.log('What/?')
+    // Verify the arguments
+    for (const arg of args) {
+      if (!arg['type'] || !arg['value'])
+        throw new Error('Must provide a type and value for each argument')
+    }
+
+    console.log(args)
+    throw new Error('Hi')
+
     return {
       name,
       description,
       sql_query: query,
-      args: argumentList,
+      args,
     }
   }
 
@@ -69,7 +77,7 @@ function CreateMatchingAlgorithmDialog(props) {
       <TextField 
         className={ classes.field }
         fullWidth
-        helperText='PSQL. Use Python formatters where arguments should be inserted.'
+        helperText='PSQL. Use %s where arguments should be inserted.'
         label={ 'Query' }
         multiline
         onChange={ e => setQuery(e.target.value) }
@@ -77,16 +85,35 @@ function CreateMatchingAlgorithmDialog(props) {
         required
         value={ query }
       />
-      <TextField 
-        className={ classes.field }
-        fullWidth
-        helperText='Comma separated arguments.'
-        label='Arguments'
-        onChange={ e => setArgs(e.target.value) }
-        placeholder='class_id,student_id...'
-        required
-        value={ args }
-      />
+      {args.map((arg, index) => (
+        <ArgCreator
+          actions={ [
+            {
+              tooltip: 'Remove',
+              icon: 'delete_outline',
+              onClick: () => {
+                const newArgs = [ ...args ]
+                newArgs.splice(index, 1)
+                setArgs(newArgs)
+              },
+            },
+          ] }
+          className={ classes.field }
+          key={ index }
+          onChange={ newValue => {
+            const newArgs = [ ...args ]
+            newArgs[index] = newValue
+            setArgs(newArgs)
+          } }
+          value={ arg }
+        />
+      ))}
+      <Button
+        onClick={ () => setArgs([ ...args, {} ]) }
+        variant='outlined'
+      >
+        Add Argument
+      </Button>
     </ConfirmDialog>
   )
 }
@@ -94,11 +121,18 @@ function CreateMatchingAlgorithmDialog(props) {
 CreateMatchingAlgorithmDialog.propTypes = {
   onClose: PropTypes.func,
   /**
-   * Passes the matching algorithm data
+   * Passes the algorithm data, matching the backend format. If an existing
+   * algorithm is passed to the initialData prop, this will only return fields
+   * that have been updated.
    */
   onConfirm: PropTypes.func,
   open: PropTypes.bool,
   loading: PropTypes.bool,
+
+  /**
+   * An existing algorithm object. Setting this prop will edit
+   */
+  initialData: PropTypes.object,
 }
 
 export default CreateMatchingAlgorithmDialog

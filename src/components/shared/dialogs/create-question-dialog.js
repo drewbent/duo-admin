@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
-import LinearScaleCreator from 'components/shared/linear-scale-creator'
+import LinearScaleCreator from 'components/shared/controls/linear-scale-creator'
 import { FormControl, InputLabel, MenuItem, Select, TextField, makeStyles } from '@material-ui/core'
 
 import { fetchQuestionTypes } from 'services/question-service'

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import LineItem from 'components/shared/line-item'
-import TooltipButton from 'components/shared/tooltip-button'
+import TooltipButton from 'components/shared/controls/tooltip-button'
 import { Toolbar, Typography, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({

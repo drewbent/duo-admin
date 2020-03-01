@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
+import CreateMatchingAlgorithmDialog from 'components/shared/dialogs/create-matching-algorithm-dialog'
 import InfoWidget from 'components/shared/widgets/info-widget'
 import Page from 'components/shared/page'
 import ReactJson from 'react-json-view'
@@ -12,6 +13,7 @@ import {
   fetchMatchingAlgorithm,
   getTestMatchingAlgorithmPath,
   testMatchingAlgorithm,
+  updateMatchingAlgorithm,
 } from 'services/matching-algorithm-service'
 import { flashError, flashSuccess } from 'components/global-flash'
 
@@ -40,6 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   field: {
     marginBottom: theme.spacing(2),
+    display: 'block',
   },
   divider: {
     marginTop: theme.spacing(2),
@@ -64,6 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     actions: {
       fetchAlgorithm: () => fetchMatchingAlgorithm(dispatch)(algorithmId),
+      updateAlgorithm: data => updateMatchingAlgorithm(dispatch)(algorithmId, data)
     },
   }
 }
@@ -122,6 +126,8 @@ function Algorithm(props) {
   const [testAlgorithmPath, setTestAlgorithmPath] = useState('')
   /** Object with keys { path, error, output } */
   const [testOutput, setTestOutput] = useState(null)
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
+  const [updateDialogLoading, setUpdateDialogLoading] = useState(false)
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -177,13 +183,37 @@ function Algorithm(props) {
         } }
         open={ selectStudentDialogOpen }
       />
+      <CreateMatchingAlgorithmDialog 
+        initialData={ algorithm }
+        loading={ updateDialogLoading }
+        onClose={ () => setUpdateDialogOpen(false) }
+        onConfirm={ data => {
+          setUpdateDialogLoading(true)
+          actions.updateAlgorithm(data)
+            .then(() => {
+              setUpdateDialogLoading(false)
+              setUpdateDialogOpen(false)
+              flashSuccess('Algorithm Updated')
+            })
+            .catch(err => {
+              setUpdateDialogLoading(false)
+              flashError(err)
+            })
+        } }
+        open={ updateDialogOpen }
+      />
       <Paper className={ classes.section }>
         <InfoWidget
           actions={ [
             {
-              tooltip: 'Test',
+              tooltip: isTesting ? 'Stop Testing' : 'Test',
               icon: isTesting ? 'stop' : 'play_arrow',
               onClick: () => setIsTesting(!isTesting),
+            },
+            {
+              tooltip: 'Edit Algorithm',
+              icon: 'edit',
+              onClick: () => {},
             },
           ] }
           title={ algorithm.name }
