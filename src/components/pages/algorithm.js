@@ -10,11 +10,12 @@ import { Button, Divider, Paper, TextField, Toolbar, Typography, makeStyles } fr
 
 import {
   fetchMatchingAlgorithm,
-  getTestMatchingAlgorithmPath,
   testMatchingAlgorithm,
   updateMatchingAlgorithm,
 } from 'services/matching-algorithm-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+
+import ArgumentType from 'models/argument-type'
 
 const getAlgorithmId = props => parseInt(props.match.params.algorithmId, 10)
 
@@ -42,6 +43,9 @@ const useStyles = makeStyles(theme => ({
   testOutput: {
     marginTop: theme.spacing(1),
   },
+  bottomSpacing1: {
+    marginBottom: theme.spacing(1),
+  },
 }))
 
 const mapStateToProps = (state, ownProps) => {
@@ -58,7 +62,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     actions: {
       fetchAlgorithm: () => fetchMatchingAlgorithm(dispatch)(algorithmId),
-      updateAlgorithm: data => updateMatchingAlgorithm(dispatch)(algorithmId, data)
+      updateAlgorithm: data => updateMatchingAlgorithm(dispatch)(algorithmId, data),
     },
   }
 }
@@ -85,12 +89,22 @@ function Algorithm(props) {
     ]).catch(flashError)
   }
 
-  // useEffect(() => {
-  //   setTestAlgorithmPath(getTestMatchingAlgorithmPath())
-  // }, [testArguments, testStudent, props.algorithm])
-  
   const algorithm = props.algorithm || {}
   const args = algorithm.args || []
+
+  const getTestAlgorithmPath = () => {
+    const student = testStudent || {}
+    const paramString = Object.keys(testArguments).reduce((acc, next) => {
+      acc.push(`${next}=${testArguments[next]}`)
+      return acc
+    }, []).join('&')
+    return `/students/${student.id}/find-matches?algorithm_id=${algorithm.id}${paramString ? `&${paramString}` : ''}`
+  }
+
+  useEffect(() => {
+    setTestAlgorithmPath(getTestAlgorithmPath())
+  }, [testArguments, testStudent, props.algorithm])
+  
   return (
     <Page loading={ props.algorithm == null }>
       <SelectStudentDialog 
@@ -106,6 +120,9 @@ function Algorithm(props) {
         loading={ updateDialogLoading }
         onClose={ () => setUpdateDialogOpen(false) }
         onConfirm={ data => {
+          if (Object.keys(data).length === 0)
+            return setUpdateDialogOpen(false)
+
           setUpdateDialogLoading(true)
           actions.updateAlgorithm(data)
             .then(() => {
@@ -152,7 +169,7 @@ function Algorithm(props) {
           >
             Arguments
           </Typography>
-          <Typography>{args.map(a => a.name ? a.name : a.value).join(', ') || 'No arguments'}</Typography>
+          <Typography>{args.map(a => a.name ? a.name : a.field).join(', ') || 'No arguments'}</Typography>
         </InfoWidget>
       </Paper>
       {isTesting && <Paper className={ classes.section }>
@@ -168,15 +185,15 @@ function Algorithm(props) {
           >
             {testStudent ? testStudent.name : <em>No student selected</em>}
           </Button>
-          {args.map((arg, i) => {
-            const value = testArguments[arg.value] || ''
+          {args.filter(arg => arg.type === ArgumentType.raw).map((arg, i) => {
+            const value = testArguments[arg.field] || ''
             return (
               <TextField
                 className={ classes.field }
                 key={ i }
-                label={ arg.name ? arg.name : arg.value }
+                label={ arg.name ? arg.name : arg.field }
                 onChange={ e => { 
-                  setTestArguments({ ...testArguments, [arg.value]: e.target.value }) 
+                  setTestArguments({ ...testArguments, [arg.field]: e.target.value }) 
                 } }
                 style={ { display: 'block' } }
                 value={ value }
@@ -213,10 +230,10 @@ function Algorithm(props) {
               className={ classes.divider }
               orientation='horizontal' 
             />
-            <Typography>
+            <Typography className={ classes.bottomSpacing1 }>
               <strong>Path </strong>{testOutput.path}
             </Typography>
-            <Typography>
+            <Typography className={ testOutput.error === false ? classes.bottomSpacing1 : '' }>
               <strong>Output </strong>{testOutput.error && testOutput.output}
             </Typography>
             {testOutput.error === false && <div className={ classes.testOutput }>

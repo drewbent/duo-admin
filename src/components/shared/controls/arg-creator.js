@@ -15,10 +15,7 @@ import {
   makeStyles,
 } from '@material-ui/core'
 
-const ARG_INPUT_TYPE = {
-  field: 'Field',
-  raw: 'Raw',
-}
+import ArgumentType from 'models/argument-type'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -40,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 function ArgCreator(props) {
   const classes = useStyles()
 
-  const defaultArgType = ARG_INPUT_TYPE.field
+  const defaultArgType = ArgumentType.field
   const value = Object.keys(props.value).length === 0 ? {
     name: '',
     type: defaultArgType,
@@ -69,22 +66,22 @@ function ArgCreator(props) {
             onChange={ e => onChange({ type: e.target.value }) }
             value={ value.type }
           >
-            {Object.keys(ARG_INPUT_TYPE).map(key => (
+            {Object.keys(ArgumentType).map(key => (
               <MenuItem
                 key={ key }
-                value={ ARG_INPUT_TYPE[key] }
+                value={ ArgumentType[key] }
               >
-                {ARG_INPUT_TYPE[key]}
+                {ArgumentType[key]}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        {value.type === ARG_INPUT_TYPE.field && <TextField
+        <TextField
           error={ value.field === '' }
           label='Field'
           onChange={ e => onChange({ field: e.target.value }) }
           value={ value.field }
-        />}
+        />
       </div>
       <div className={ classes.section }>
         {(props.actions || []).map((action, index) => (

@@ -29,6 +29,11 @@ function CreateMatchingAlgorithmDialog(props) {
     if (!query) 
       throw new Error('Must provide a query')
 
+    for (const arg of args) {
+      if (!arg.type || !arg.field)
+        throw new Error('Must provide a type and field for each argument')
+    }
+
     // If initialData provided, only pass the fields that changed
     const data = {}
     const isEditing = props.initialData != null
