@@ -5,6 +5,7 @@ import ArgCreator from 'components/shared/controls/arg-creator'
 import ConfirmDialog from 'components/shared/dialogs/confirm-dialog'
 import { Button, TextField, makeStyles } from '@material-ui/core'
 
+import { areObjectElementsEqual } from 'utils/array-utils'
 import { flashError } from 'components/global-flash'
 
 const useStyles = makeStyles(theme => ({
@@ -15,10 +16,11 @@ const useStyles = makeStyles(theme => ({
 
 function CreateMatchingAlgorithmDialog(props) {
   const classes = useStyles()
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [query, setQuery] = useState('')
-  const [args, setArgs] = useState([])
+  const initialData = props.initialData || {}
+  const [name, setName] = useState(initialData.name || '')
+  const [description, setDescription] = useState(initialData.description || '')
+  const [query, setQuery] = useState(initialData.sql_query || '')
+  const [args, setArgs] = useState(initialData.args || [])
 
   const getAlgorithm = () => {
     if (!name) 
@@ -27,21 +29,23 @@ function CreateMatchingAlgorithmDialog(props) {
     if (!query) 
       throw new Error('Must provide a query')
 
-    // Verify the arguments
-    for (const arg of args) {
-      if (!arg['type'] || !arg['value'])
-        throw new Error('Must provide a type and value for each argument')
-    }
+    // If initialData provided, only pass the fields that changed
+    const data = {}
+    const isEditing = props.initialData != null
 
-    console.log(args)
-    throw new Error('Hi')
+    if (!isEditing || name !== props.initialData.name) 
+      data.name = name
+    
+    if (!isEditing || description !== props.initialData.description) 
+      data.description = description
 
-    return {
-      name,
-      description,
-      sql_query: query,
-      args,
-    }
+    if (!isEditing || query !== props.initialData.sql_query)
+      data.sql_query = query
+
+    if (!isEditing || !areObjectElementsEqual(props.initialData.args || [], args))
+      data.args = args
+
+    return data
   }
 
   return (

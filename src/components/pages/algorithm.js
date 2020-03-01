@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 
@@ -7,7 +6,7 @@ import InfoWidget from 'components/shared/widgets/info-widget'
 import Page from 'components/shared/page'
 import ReactJson from 'react-json-view'
 import SelectStudentDialog from 'components/shared/dialogs/select-student-dialog'
-import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import { Button, Divider, Paper, TextField, Toolbar, Typography, makeStyles } from '@material-ui/core'
 
 import {
   fetchMatchingAlgorithm,
@@ -31,14 +30,6 @@ const useStyles = makeStyles(theme => ({
   heading: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(0.5),
-  },
-  argumentInput: {
-    marginBottom: theme.spacing(2),
-    display: 'flex',
-  },
-  argumentTypeSelect: {
-    minWidth: 200,
-    marginRight: theme.spacing(2),
   },
   field: {
     marginBottom: theme.spacing(2),
@@ -72,48 +63,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-const ARG_INPUT_TYPE = {
-  field: 'Field',
-  raw: 'Raw',
-}
-
-function ArgumentInput(props) {
-  const classes = useStyles()
-  return (
-    <div className={ classes.argumentInput }>
-      <FormControl className={ classes.argumentTypeSelect }>
-        <InputLabel>Argument Type</InputLabel>
-        <Select
-          onChange={ e => props.onChangeType(e.target.value) }
-          value={ props.type }
-        >
-          {Object.keys(ARG_INPUT_TYPE).map(key => (
-            <MenuItem
-              key={ key }
-              value={ ARG_INPUT_TYPE[key] }
-            >
-              {ARG_INPUT_TYPE[key]}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <TextField 
-        label={ props.arg }
-        onChange={ e => props.onChangeValue(e.target.value) }
-        value={ props.value || '' }
-      />
-    </div>
-  )
-}
-
-ArgumentInput.propTypes = {
-  arg: PropTypes.string,
-  onChangeValue: PropTypes.func.isRequired,
-  value: PropTypes.string,
-  onChangeType: PropTypes.func,
-  type: PropTypes.string,
-}
-
 function Algorithm(props) {
   const classes = useStyles()
   const { actions } = props
@@ -136,40 +85,9 @@ function Algorithm(props) {
     ]).catch(flashError)
   }
 
-  const updateTestArg = (arg, newData) => {
-    setTestArguments({ ...testArguments, [arg]: {
-      ...(testArguments[arg] || {}),
-      ...newData,
-    } })
-  }
-
-  const getTestAlgorithmPath = () => {
-    const student = testStudent || {}
-
-    // Get argument values
-    const args = Object.keys(testArguments).reduce((acc, next) => {
-      const input = testArguments[next]
-
-      let value = undefined
-      switch (input.type) {
-        case ARG_INPUT_TYPE.raw:
-          value = input.value
-          break
-        case ARG_INPUT_TYPE.field:
-        default:
-          value = student[input.value]
-      }
-
-      acc[next] = value
-      return acc
-    }, {})
-
-    return getTestMatchingAlgorithmPath(student, props.algorithm || {}, args)
-  }
-
-  useEffect(() => {
-    setTestAlgorithmPath(getTestAlgorithmPath())
-  }, [testArguments, testStudent, props.algorithm])
+  // useEffect(() => {
+  //   setTestAlgorithmPath(getTestMatchingAlgorithmPath())
+  // }, [testArguments, testStudent, props.algorithm])
   
   const algorithm = props.algorithm || {}
   const args = algorithm.args || []
@@ -213,7 +131,7 @@ function Algorithm(props) {
             {
               tooltip: 'Edit Algorithm',
               icon: 'edit',
-              onClick: () => {},
+              onClick: () => setUpdateDialogOpen(true),
             },
           ] }
           title={ algorithm.name }
@@ -234,7 +152,7 @@ function Algorithm(props) {
           >
             Arguments
           </Typography>
-          <Typography>{args.join(', ') || 'No arguments'}</Typography>
+          <Typography>{args.map(a => a.name ? a.name : a.value).join(', ') || 'No arguments'}</Typography>
         </InfoWidget>
       </Paper>
       {isTesting && <Paper className={ classes.section }>
@@ -250,16 +168,18 @@ function Algorithm(props) {
           >
             {testStudent ? testStudent.name : <em>No student selected</em>}
           </Button>
-          {args.map(arg => {
-            const testArg = testArguments[arg] || {}
+          {args.map((arg, i) => {
+            const value = testArguments[arg.value] || ''
             return (
-              <ArgumentInput
-                arg={ arg }
-                key={ arg }
-                onChangeType={ type => updateTestArg(arg, { type }) }
-                onChangeValue={ value => updateTestArg(arg, { value }) }
-                type={ testArg.type || ARG_INPUT_TYPE.field }
-                value={ testArg.value }
+              <TextField
+                className={ classes.field }
+                key={ i }
+                label={ arg.name ? arg.name : arg.value }
+                onChange={ e => { 
+                  setTestArguments({ ...testArguments, [arg.value]: e.target.value }) 
+                } }
+                style={ { display: 'block' } }
+                value={ value }
               />
             )
           })}

@@ -41,7 +41,7 @@ function Algorithms(props) {
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
-  const [createDialogOpen, setCreateDialogOpen] = useState(true)
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createDialogLoading, setCreateDialogLoading] = useState(false)
   const [createActiveDialogOpen, setCreateActiveDialogOpen] = useState(false)
   const [createActiveDialogLoading, setCreateActiveDialogLoading] = useState(false)

@@ -44,7 +44,7 @@ function ArgCreator(props) {
   const value = Object.keys(props.value).length === 0 ? {
     name: '',
     type: defaultArgType,
-    value: '',
+    field: '',
   } : props.value
 
   const onChange = newData => {
@@ -79,13 +79,12 @@ function ArgCreator(props) {
             ))}
           </Select>
         </FormControl>
-        <TextField
-          error={ value.value === '' }
-          label='Value'
-          onChange={ e => onChange({ value: e.target.value }) }
-          required
-          value={ value.value }
-        />
+        {value.type === ARG_INPUT_TYPE.field && <TextField
+          error={ value.field === '' }
+          label='Field'
+          onChange={ e => onChange({ field: e.target.value }) }
+          value={ value.field }
+        />}
       </div>
       <div className={ classes.section }>
         {(props.actions || []).map((action, index) => (
