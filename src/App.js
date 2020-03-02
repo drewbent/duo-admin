@@ -16,6 +16,7 @@ import Algorithm from 'components/pages/algorithm'
 import Algorithms from 'components/pages/algorithms'
 import Class from 'components/pages/class'
 import Classes from 'components/pages/classes'
+import CompletionFeed from 'components/pages/completion-feed'
 import Distribution from 'components/pages/distribution'
 import Form from 'components/pages/form'
 import Forms from 'components/pages/forms'
@@ -98,6 +99,8 @@ function App(props) {
               <AuthRoute component={ Forms }
                 exact
                 path='/forms' />
+              <AuthRoute component={ CompletionFeed }
+                path='/completion-feed' />
               <AuthRoute component={ SessionFeed }
                 path='/session-feed' />
               <Route component={ NotFound } />

@@ -6,7 +6,6 @@ import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import { Cancel, CheckCircle } from '@material-ui/icons'
 import { CircularProgress, Typography, makeStyles } from '@material-ui/core'
-import { green } from '@material-ui/core/colors'
 
 import { fetchAllStudents } from 'services/class-student-service'
 import { fetchSessions } from 'services/session-service'
@@ -26,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.error.dark,
   },
   finishedIcon: {
-    color: green[600],
+    color: theme.palette.success.dark,
   },
 }))
 

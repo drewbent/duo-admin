@@ -5,6 +5,13 @@ import { addCompletions } from 'redux/actions/completions'
 import { setSessionAfter, setSessionBefore } from 'redux/actions/session-before-after'
 import { setUserCompletions } from 'redux/actions/user-completions'
 
+export const fetchTodaysCompletions = dispatch => async() => {
+  console.log('Fetching today\'s completions')
+  const startTime = Math.floor((new Date()).getTime() / 1000)
+  const { data } = await api.get(`/ka-skill-completion?start_time=${startTime}`)
+  return dispatch(addCompletions(data))
+}
+
 export const fetchCompletionsForStudent = dispatch => async studentId => {
   console.log(`Fetching completions for user ${studentId}`)
   const { data } = await api.get(`/students/${studentId}/ka-skill-completions`)

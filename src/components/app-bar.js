@@ -39,6 +39,11 @@ const links = [
     route: '/forms',
   },
   {
+    title: 'Completion Feed',
+    icon: 'assignment',
+    route: 'completion-feed',
+  },
+  {
     title: 'Session Feed',
     icon: 'dynamic_feed',
     route: '/session-feed',
