@@ -41,7 +41,7 @@ const links = [
   {
     title: 'Completion Feed',
     icon: 'assignment',
-    route: 'completion-feed',
+    route: '/completion-feed',
   },
   {
     title: 'Session Feed',
