@@ -15,7 +15,6 @@ export const fetchCompletionsFromDate = dispatch => async date => {
   const startTime = Math.floor(date.getTime() / 1000)
   console.log(`Fetching completions from ${startTime}`)
   const { data } = await api.get(`/ka-skill-completion?start_time=${startTime}`)
-  console.log(data)
   return dispatch(addCompletions(data))
 }
 

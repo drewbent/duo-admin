@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 const mapStateToProps = state => ({
   completions: getTodaysCompletions(state)
     .filter(c => c.recorded_from === 'unit_view_task' || c.recorded_from === 'lesson_view_task')
-    .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at)),
+    .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)),
   students: state.Students,
 })
 
