@@ -52,7 +52,7 @@ function CompletionFeed(props) {
   if (!hasFetchedData) {
     setHasFetchedData(true)
     Promise.all([
-      fetchAllStudents(),
+      actions.fetchAllStudents(),
     ]).catch(flashError)
   }
   
@@ -67,7 +67,8 @@ function CompletionFeed(props) {
           <MaterialTable 
             columns={ [
               { title: 'ID', field: 'id' },
-              { skill: 'Skill', field: 'skill' },
+              { title: 'Skill', field: 'skill' },
+              { title: 'Student', render: row => (props.students[row.student_id] || {}).name },
               { title: '# Correct', field: 'questions_correct' },
               { title: '# Questions', field: 'questions_out_of' },
               { title: 'Recorded', render: row => 
