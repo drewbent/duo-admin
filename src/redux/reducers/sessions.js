@@ -21,3 +21,14 @@ export default (state = initialState, action) => {
 export const getTodaysSessions = state => {
   return Object.values(state.Sessions).filter(session => isToday(session.start_time))
 }
+
+export const getSessionsForClass = (state, classId) => {
+  const isStudentInClass = studentId => {
+    const student = state.Students[studentId] || {}
+    return student.class_section_id === classId
+  }
+
+  return Object.values(state.Sessions).filter(session => 
+    isStudentInClass(session.guide_id) || isStudentInClass(session.learner_id)
+  )
+}

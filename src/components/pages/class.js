@@ -18,6 +18,7 @@ import { fetchClass } from 'services/classes-service'
 import { fetchSessionsForClass } from 'services/session-service'
 import { fetchSkillsForClass } from 'services/skill-service'
 import { flashError, flashSuccess } from 'components/global-flash'
+import { getSessionsForClass } from 'redux/reducers/sessions'
 import { getSlugFromSkill } from '../../utils/skill-utils'
 
 import { formatDateTime } from 'utils/date-utils'
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function getClassId(props) {
-  return props.match.params.classId
+  return parseInt(props.match.params.classId, 10)
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -42,9 +43,7 @@ const mapStateToProps = (state, ownProps) => {
       .map(studentId => allStudents[studentId]) || [])
       .filter(x => x),
     allStudents,
-    sessions: (state.ClassSessions[classId] || [])
-      .map(sessionId => state.Sessions[sessionId])
-      .filter(x => x),
+    sessions: getSessionsForClass(state, classId),
     skills: state.ClassSkills[classId] || [],
   }
 }

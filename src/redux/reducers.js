@@ -2,7 +2,6 @@ import { combineReducers } from 'redux'
 
 import ActiveMatchingAlgorithms from './reducers/active-matching-algorithms'
 import CancellationReasons from './reducers/cancellation-reasons'
-import ClassSessions from './reducers/class-sessions'
 import ClassSkills from './reducers/class-skills'
 import ClassStudents from './reducers/class-students'
 import Classes from './reducers/classes'
@@ -25,7 +24,6 @@ import Users from './reducers/users'
 const reducers = combineReducers({
   ActiveMatchingAlgorithms,
   CancellationReasons,
-  ClassSessions,
   ClassSkills,
   ClassStudents,
   Classes,
