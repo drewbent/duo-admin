@@ -20,3 +20,16 @@ export default (state = initialState, action) => {
       return state
   }
 }
+
+/**
+ * Determine if the given student is in the given class
+ * 
+ * @param {Object} state Redux state
+ * @param {Number} studentId Student ID
+ * @param {Number} classId Class ID
+ * @returns Bool; true if the student is in the class
+ */
+export const isStudentInClass = (state, studentId, classId) => {
+  const student = state.Students[studentId] || {}
+  return student.class_section_id === classId
+}

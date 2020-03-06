@@ -30,12 +30,12 @@ function ClassSelector(props) {
   
   return (
     <FormControl fullWidth>
-      <InputLabel id='class-selector-label'>Class</InputLabel>
+      <InputLabel>{props.title || 'Class'}</InputLabel>
       <Select
         onChange={ e => props.onChange(e.target.value) }
         value={ props.value }
       >
-        <MenuItem value={ -1 }><em>None</em></MenuItem>
+        <MenuItem value={ -1 }><em>{props.nullValueText || 'None'}</em></MenuItem>
         {Object.values(props.classes).map(c => (
           <MenuItem
             key={ c.id }
@@ -50,6 +50,8 @@ function ClassSelector(props) {
 }
 
 ClassSelector.propTypes = {
+  nullValueText: PropTypes.string,
+  title: PropTypes.string,
   value: PropTypes.number,
   onChange: PropTypes.func,
 }

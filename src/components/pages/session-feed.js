@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
+import ClassSelector from 'components/shared/selectors/class-selector'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
 import { Cancel, CheckCircle } from '@material-ui/icons'
@@ -13,6 +14,7 @@ import { fetchSessions } from 'services/session-service'
 import { flashError } from 'components/global-flash'
 import { formatTime, sortDatesForObjects } from 'utils/date-utils'
 import { getAfter, getTodaysSessions } from 'redux/reducers/sessions'
+import { isStudentInClass } from 'redux/reducers/students'
 
 const useStyles = makeStyles(theme => ({
   footerText: {
@@ -36,6 +38,7 @@ const mapStateToProps = state => ({
     .map(session => ({ ...session, after: getAfter(state, session.id) })),
   students: state.Students,
   completions: state.Completions,
+  isStudentInClass: (studentId, classId) => isStudentInClass(state, studentId, classId),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -51,6 +54,7 @@ function SessionFeed(props) {
   const classes = useStyles()
   const { actions } = props
   const [hasFetchedData, setHasFetchedData] = useState(false)
+  const [classFilter, setClassFilter] = useState(-1)
 
   const fetchSessions = () => actions.fetchSessions().catch(flashError)
   const fetchCompletions = () => actions.fetchTodaysCompletions().catch(flashError)
@@ -97,63 +101,76 @@ function SessionFeed(props) {
 
   return (
     <Page>
-      {props.sessions.map(session => (
-        <div 
-          className={ classes.row }
-          key={ session.id }
-        >
-          <MaterialTable 
-            columns={ [
-              { title: 'ID', field: 'id' },
-              {
-                title: 'Start Time',
-                render: rowData => formatTime(rowData.start_time),
-              },
-              { title: 'Skill', field: 'skill' },
-              { 
-                title: 'Guide',
-                render: rowData => (props.students[rowData.guide_id] || {}).name,
-              },
-              {
-                title: 'Learner',
-                render: rowData => (props.students[rowData.learner_id] || {}).name,
-              },
-              { 
-                title: 'Manually Requested', 
-                render: rowData => rowData.manually_requested ? 'Yes' : 'No',
-              },
-              {
-                title: 'Status',
-                render: rowData => {
-                  if (rowData.cancellation_reason)
-                    return <Cancel className={ classes.cancelledIcon } />
-                  else if (rowData.end_time)
-                    return <CheckCircle className={ classes.finishedIcon } />
-                  else
-                    return <CircularProgress size={ 24 } />
+      <div className={ classes.row }>
+        <ClassSelector 
+          nullValueText='All'
+          onChange={ setClassFilter }
+          title='Filter Class'
+          value={ classFilter }
+        />
+      </div>
+      {props.sessions
+        .filter(session => (
+          classFilter == -1 || props.isStudentInClass(session.learner_id, classFilter)
+        ))
+        .map(session => (
+          <div 
+            className={ classes.row }
+            key={ session.id }
+          >
+            <MaterialTable 
+              columns={ [
+                { title: 'ID', field: 'id' },
+                {
+                  title: 'Start Time',
+                  render: rowData => formatTime(rowData.start_time),
                 },
-              },
-              {
-                title: 'Taught',
-                render: rowData => {
-                  const { after } = rowData
-                  if (after == null || after.questions_out_of == null) return ''
+                { title: 'Skill', field: 'skill' },
+                { 
+                  title: 'Guide',
+                  render: rowData => (props.students[rowData.guide_id] || {}).name,
+                },
+                {
+                  title: 'Learner',
+                  render: rowData => (props.students[rowData.learner_id] || {}).name,
+                },
+                { 
+                  title: 'Manually Requested', 
+                  render: rowData => rowData.manually_requested ? 'Yes' : 'No',
+                },
+                {
+                  title: 'Status',
+                  render: rowData => {
+                    if (rowData.cancellation_reason)
+                      return <Cancel className={ classes.cancelledIcon } />
+                    else if (rowData.end_time)
+                      return <CheckCircle className={ classes.finishedIcon } />
+                    else
+                      return <CircularProgress size={ 24 } />
+                  },
+                },
+                {
+                  title: 'Taught',
+                  render: rowData => {
+                    const { after } = rowData
+                    if (after == null || after.questions_out_of == null) return ''
 
-                  return after.questions_correct === after.questions_out_of 
-                    ? '✅'
-                    : '❌'
+                    return after.questions_correct === after.questions_out_of 
+                      ? '✅'
+                      : '❌'
+                  },
                 },
-              },
-            ] }
-            data={ [session] }
-            onRowClick={ (_, rowData) => props.history.push(`/session-feed/sessions/${rowData.id}`) }
-            options={ {
-              toolbar: false,
-              paging: false,
-            } }
-          />
-        </div>
-      ))}
+              ] }
+              data={ [session] }
+              onRowClick={ (_, rowData) => props.history.push(`/session-feed/sessions/${rowData.id}`) }
+              options={ {
+                toolbar: false,
+                paging: false,
+              } }
+            />
+          </div>
+        ))
+      }
       <Typography className={ classes.footerText }>Only sessions from today are displayed.</Typography>
     </Page>
   )

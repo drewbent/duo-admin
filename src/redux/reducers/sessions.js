@@ -1,6 +1,7 @@
 import 'utils/array-utils'
 import { ADD_SESSIONS } from '../action-list'
 
+import { isStudentInClass } from 'redux/reducers/students'
 import { isToday } from 'utils/date-utils'
 
 /** Mapping of sessionId => session  */
@@ -23,13 +24,10 @@ export const getTodaysSessions = state => {
 }
 
 export const getSessionsForClass = (state, classId) => {
-  const isStudentInClass = studentId => {
-    const student = state.Students[studentId] || {}
-    return student.class_section_id === classId
-  }
+  const isInClass = studentId => isStudentInClass(state, studentId, classId)
 
   return Object.values(state.Sessions).filter(session => 
-    isStudentInClass(session.guide_id) || isStudentInClass(session.learner_id)
+    isInClass(session.learner_id) || isInClass(session.guide_id)
   )
 }
 
