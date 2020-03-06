@@ -32,3 +32,18 @@ export const getSessionsForClass = (state, classId) => {
     isStudentInClass(session.guide_id) || isStudentInClass(session.learner_id)
   )
 }
+
+/**
+ * Selector for getting the sessions for a student.
+ * 
+ * @param {Object} state 
+ * @param {*} studentId 
+ * @param {String} role Accepts 'learner', 'guide', or anything else. If 'learner'
+ * is passed it will only return sessions where the student was the learner; if 'guide',
+ * the student was the guide; for anything else, it returns anything
+ */
+export const getSessionsForStudent = (state, studentId) => {
+  return Object.values(state.Sessions).filter(session => (
+    session.guide_id === studentId || session.learner_id === studentId
+  ))
+}

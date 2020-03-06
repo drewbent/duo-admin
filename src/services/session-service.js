@@ -10,6 +10,12 @@ export const fetchSessionsForClass = dispatch => async classId => {
   return dispatch(addSessions(data))
 }
 
+export const fetchSessionsForStudent = dispatch => async studentId => {
+  console.log(`Fetching sessions for student ${studentId}`)
+  const { data } = await api.get(`/students/${studentId}/tutoring-sessions`)
+  return dispatch(addSessions(data))
+}
+
 export const fetchSession = dispatch => async id => {
   console.log(`Fetching session ${id}`)
   const { data } = await api.get(`/tutoring-sessions/${id}`)
