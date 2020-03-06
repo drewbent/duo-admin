@@ -10,7 +10,7 @@ import { CircularProgress, Typography, makeStyles } from '@material-ui/core'
 import { fetchAllStudents } from 'services/class-student-service'
 import { fetchSessions } from 'services/session-service'
 import { flashError } from 'components/global-flash'
-import { formatTime } from 'utils/date-utils'
+import { formatTime, sortDatesForObjects } from 'utils/date-utils'
 import { getTodaysSessions } from 'redux/reducers/sessions'
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const mapStateToProps = state => ({
-  sessions: getTodaysSessions(state).sort((a, b) => Date.parse(b.start_time) - Date.parse(a.start_time)),
+  sessions: getTodaysSessions(state).sort(sortDatesForObjects('start_time', false)),
   students: state.Students,
 })
 
@@ -76,7 +76,7 @@ function SessionFeed(props) {
               { title: 'ID', field: 'id' },
               {
                 title: 'Start Time',
-                render: rowData => formatTime(Date.parse(rowData.start_time)),
+                render: rowData => formatTime(rowData.start_time),
               },
               { title: 'Skill', field: 'skill' },
               { 

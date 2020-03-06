@@ -171,7 +171,12 @@ function Session(props) {
           >
             <MenuItem value={ -1 }><em>None</em></MenuItem>
             {(props.cancellationReasons || []).map(reason => (
-              <MenuItem value={ reason.value }>{ reason.title }</MenuItem>
+              <MenuItem 
+                key={ reason.value }
+                value={ reason.value }
+              >
+                { reason.title }
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

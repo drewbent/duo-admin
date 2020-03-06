@@ -21,7 +21,7 @@ import { flashError, flashSuccess } from 'components/global-flash'
 import { getSessionsForClass } from 'redux/reducers/sessions'
 import { getSlugFromSkill } from '../../utils/skill-utils'
 
-import { formatDateTime } from 'utils/date-utils'
+import { formatDateTime, sortDatesForObjects } from 'utils/date-utils'
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -173,7 +173,7 @@ function Class(props) {
             {
               title: 'Start',
               render: rowData => formatDateTime(rowData.start_time),
-              customSort: (a, b) => Date.parse(a.start_time) - Date.parse(b.start_time),
+              customSort: sortDatesForObjects('start_time'),
               defaultSort: 'desc',
             },
             {

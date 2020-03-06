@@ -10,6 +10,8 @@ import { fetchTodaysCompletions } from 'services/completions-service'
 import { flashError } from 'components/global-flash'
 import { getTodaysCompletions } from 'redux/reducers/completions'
 
+import { sortDatesForObjects } from 'utils/date-utils'
+
 const useStyles = makeStyles(theme => ({
   footerText: {
     textAlign: 'center',
@@ -23,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 const mapStateToProps = state => ({
   completions: getTodaysCompletions(state)
     .filter(c => c.recorded_from === 'unit_view_task' || c.recorded_from === 'lesson_view_task')
-    .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)),
+    .sort(sortDatesForObjects('created_at', false)),
   students: state.Students,
 })
 

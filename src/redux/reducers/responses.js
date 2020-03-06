@@ -1,6 +1,8 @@
 import 'utils/array-utils'
 import { ADD_RESPONSES } from '../action-list'
 
+import { sortDatesForObjects } from 'utils/date-utils'
+
 /** Mapping of responseId => response */
 const initialState = {}
 
@@ -72,7 +74,7 @@ const getFeedback = (state, groupBy, filterId, sortByTime = true) => {
   })
 
   if (sortByTime) {
-    feedback = feedback.sort((a, b) => Date.parse(a.time) - Date.parse(b.time))
+    feedback = feedback.sort(sortDatesForObjects('time'))
   }
 
   return feedback
