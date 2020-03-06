@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -8,10 +8,11 @@ import { Cancel, CheckCircle } from '@material-ui/icons'
 import { CircularProgress, Typography, makeStyles } from '@material-ui/core'
 
 import { fetchAllStudents } from 'services/class-student-service'
+import { fetchCompletionAfterSession, fetchTodaysCompletions } from 'services/completions-service'
 import { fetchSessions } from 'services/session-service'
 import { flashError } from 'components/global-flash'
 import { formatTime, sortDatesForObjects } from 'utils/date-utils'
-import { getTodaysSessions } from 'redux/reducers/sessions'
+import { getAfter, getTodaysSessions } from 'redux/reducers/sessions'
 
 const useStyles = makeStyles(theme => ({
   footerText: {
@@ -30,12 +31,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const mapStateToProps = state => ({
-  sessions: getTodaysSessions(state).sort(sortDatesForObjects('start_time', false)),
+  sessions: getTodaysSessions(state)
+    .sort(sortDatesForObjects('start_time', false))
+    .map(session => ({ ...session, after: getAfter(state, session.id) })),
   students: state.Students,
+  completions: state.Completions,
 })
 
 const mapDispatchToProps = dispatch => ({
   actions: {
+    fetchAfter: fetchCompletionAfterSession(dispatch),
+    fetchTodaysCompletions: fetchTodaysCompletions(dispatch),
     fetchSessions: fetchSessions(dispatch),
     fetchStudents: fetchAllStudents(dispatch),
   },
@@ -47,15 +53,40 @@ function SessionFeed(props) {
   const [hasFetchedData, setHasFetchedData] = useState(false)
 
   const fetchSessions = () => actions.fetchSessions().catch(flashError)
+  const fetchCompletions = () => actions.fetchTodaysCompletions().catch(flashError)
 
   // Start interval
   useEffect(() => {
     fetchSessions()
+    fetchCompletions()
     const interval = setInterval(() => {
       fetchSessions()
+      fetchCompletions()
     }, 5000)
     return () => clearInterval(interval)
   }, [])
+
+  // Track & fetch 'afters'
+  const fetchingAfterFor = useRef(null)
+  useEffect(() => {
+    fetchingAfterFor.current = {}
+  }, [])
+
+  useEffect(() => {
+    props.sessions.forEach(session => {
+      if (!session.after && !fetchingAfterFor.current[session.id]) {
+        fetchingAfterFor.current[session.id] = true
+        actions.fetchAfter(session.id)
+          .then(() => {
+            fetchingAfterFor.current[session.id] = false
+          })
+          .catch(err => {
+            fetchingAfterFor.current[session.id] = false
+            flashError(err)
+          })
+      }
+    })
+  }, [props.sessions])
 
   if (!hasFetchedData) {
     setHasFetchedData(true)
@@ -100,6 +131,17 @@ function SessionFeed(props) {
                     return <CheckCircle className={ classes.finishedIcon } />
                   else
                     return <CircularProgress size={ 24 } />
+                },
+              },
+              {
+                title: 'Taught',
+                render: rowData => {
+                  const { after } = rowData
+                  if (after == null || after.questions_out_of == null) return ''
+
+                  return after.questions_correct === after.questions_out_of 
+                    ? '✅'
+                    : '❌'
                 },
               },
             ] }

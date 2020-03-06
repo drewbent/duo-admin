@@ -47,3 +47,14 @@ export const getSessionsForStudent = (state, studentId) => {
     session.guide_id === studentId || session.learner_id === studentId
   ))
 }
+
+/**
+ * Fetches the 'after' for a session
+ */
+export const getAfter = (state, sessionId) => {
+  const beforeAfter = state.SessionBeforeAfter[sessionId]
+  if (beforeAfter == null || beforeAfter.after == null)
+    return null
+  
+  return state.Completions[beforeAfter.after]
+}
