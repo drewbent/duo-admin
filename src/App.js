@@ -12,6 +12,7 @@ import GlobalFlash from 'components/global-flash'
 import SplashScreen from 'components/pages/splash-screen'
 
 // Pages
+import Admin from 'components/pages/admin'
 import Algorithm from 'components/pages/algorithm'
 import Algorithms from 'components/pages/algorithms'
 import Class from 'components/pages/class'
@@ -64,7 +65,10 @@ function App(props) {
               <Route
                 exact
                 path='/'
-                render={ () => <Redirect to='/classes' /> } />
+                render={ () => <Redirect to='/admin' /> } />
+              <AuthRoute component={ Admin }
+                exact
+                path='/admin' />
               <AuthRoute component={ Algorithm }
                 exact
                 path='/algorithms/:algorithmId' />

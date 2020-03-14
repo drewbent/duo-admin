@@ -12,6 +12,7 @@ import FormQuestions from './reducers/form-questions'
 import Forms from './reducers/forms'
 import GlobalFlash from './reducers/global-flash'
 import MatchingAlgorithms from './reducers/matching-algorithms'
+import OnlineMode from './reducers/online-mode'
 import QuestionTypes from './reducers/question-types'
 import Questions from './reducers/questions'
 import Responses from './reducers/responses'
@@ -34,6 +35,7 @@ const reducers = combineReducers({
   Forms,
   GlobalFlash,
   MatchingAlgorithms,
+  OnlineMode,
   QuestionTypes,
   Questions,
   Responses,
