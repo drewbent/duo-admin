@@ -6,9 +6,10 @@ import CreateFeedbackDialog from 'components/shared/dialogs/create-feedback-dial
 
 import FeedbackWidget from 'components/shared/widgets/feedback-widget'
 import InfoWidget from 'components/shared/widgets/info-widget'
+import LineItem from 'components/shared/line-item'
 import MaterialTable from 'material-table'
 import Page from 'components/shared/page'
-import { FormControl, InputLabel, MenuItem, Paper, Select, makeStyles, useTheme } from '@material-ui/core'
+import { Divider, FormControl, InputLabel, MenuItem, Paper, Select, Typography, makeStyles, useTheme } from '@material-ui/core'
 
 import { cancelSession, fetchCancellationReasons, fetchSession, finishSession } from 'services/session-service'
 import { createFeedback, fetchResponsesForSession } from 'services/response-service'
@@ -18,6 +19,7 @@ import { flashError, flashSuccess } from 'components/global-flash'
 import { getFeedbackForSession } from 'redux/reducers/responses'
 
 import * as DateUtils from 'utils/date-utils'
+import RequestStatus from 'models/session-request-status'
 
 const getSessionId = props => parseInt(props.match.params.sessionId, 10)
 
@@ -45,6 +47,20 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1),
   },
   responseQuestion: {
+    marginBottom: theme.spacing(2),
+  },
+  requestInfo: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    paddingBottom: theme.spacing(2),
+    maxWidth: 500,
+  },
+  requestTitle: {
+    marginBottom: theme.spacing(2),
+  },
+  divider: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
     marginBottom: theme.spacing(2),
   },
 }))
@@ -238,6 +254,25 @@ function Session(props) {
           ] }
           title='Session Info'
         />
+        {session.request_status !== RequestStatus.not_applicable && <div>
+          <Divider className={ classes.divider } />
+          <div className={ classes.requestInfo }>
+            <Typography 
+              className={ classes.requestTitle }
+              variant='h6'
+            >
+              Request
+            </Typography>
+            <LineItem 
+              detail={ session.request_status }
+              title='Request Status'
+            />
+            {session.request_status === RequestStatus.rejected && <LineItem 
+              detail={ session.rejection_note }
+              title='Rejection Note'
+            />}
+          </div>
+        </div>}
       </Paper>
       {!session.manually_requested && <div className={ classes.section }>
         <SingleCompletionTable 
