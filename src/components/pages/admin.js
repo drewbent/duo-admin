@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const mapStateToProps = state => ({
-  isOnline: state.OnlineMode || false,
+  isOnline: state.OnlineMode,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -45,7 +45,6 @@ function Admin(props) {
               checked={ props.isOnline } 
               onChange={ e => {
                 actions.setOnlineMode(e.target.checked) 
-                  .then(() => flashSuccess())
                   .catch(flashError)
               } }
             /> 
