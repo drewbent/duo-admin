@@ -1,6 +1,46 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+    <p align="center">
+        <a href="https://www.youtube.com/watch?v=HqCNxhVDSgs" title="Duo — 1-on-1 peer learning for Khan Academy">
+            <img src="https://i.imgur.com/LkUGAuD.png" alt="Logo" width="150px" />
+        </a>
+        <h1>Duo Admin</h1>
+    </p>
+</div>
+
+<p align="center">1-on-1 peer learning for Khan Academy.</p>
+
+<div align="center">
+    <p align="center">
+        <a href="https://www.youtube.com/watch?v=HqCNxhVDSgs" title="Duo — 1-on-1 peer learning for Khan Academy">
+            <img src="https://i.imgur.com/z03nnf8.png" alt="Duo screenshot" style="max-width: 800px; width: 100%" />
+        </a>
+    </p>
+</div>
+
+## Overview
+
+Admin dashboard for the Duo project. Built with React.
+
+## What is the Duo project?
+
+1-on-1 peer learning for Khan Academy.
+
+Duo is a Chrome extension for students in the Khan Lab School or Oxford Day Academy PeerX classes to engage in peer learning. It is not intended for widespread public use and is not currently being maintained, although you are welcome to draw inspiration or adapt from it. It is licensed under the terms of the MIT license.
+
+The project was created by Drew Bent and Phil Shen in 2020.
+
+### Links
+- [Video overview](https://www.youtube.com/watch?v=HqCNxhVDSgs)
+- [Chrome extension used in KLS and ODA classes](http://bit.ly/chromeduo)
+
+### Repositories
+- [Chrome extension](https://github.com/drewbent/duo)
+- [Backend and API](https://github.com/drewbent/duo-backend)
+- [Admin dashboard](https://github.com/drewbent/duo-admin)
 
 ## Available Scripts
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
 
@@ -41,33 +81,3 @@ This will run the unit test suite and collect coverage.
 ### `yarn test:nocoverage`
 
 This will run the test suite without collecting coverage.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
